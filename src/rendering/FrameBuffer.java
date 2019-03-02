@@ -44,6 +44,22 @@ public class FrameBuffer {
         initialiseFrameBuffer(depthBufferType);
     }
 
+    public void draw(int x, int y, double scale) {
+        GL11.glEnable(GL11.GL_TEXTURE_2D);
+
+        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
+
+// Draw a textured quad
+        GL11.glBegin(GL11.GL_QUADS);
+        GL11.glTexCoord2f(0, 0); GL11.glVertex2d(x - width*scale*0.5,y - height*scale*0.5);
+        GL11.glTexCoord2f(0, 1); GL11.glVertex2d(x - width*scale*0.5,y + height*scale*0.5);
+        GL11.glTexCoord2f(1, 1); GL11.glVertex2d(x + width*scale*0.5,y + height*scale*0.5);
+        GL11.glTexCoord2f(1, 0); GL11.glVertex2d(x + width*scale*0.5,y - height*scale*0.5);
+
+        GL11.glDisable(GL11.GL_TEXTURE_2D);
+        GL11.glEnd();
+    }
+
     /**
      * Deletes the frame buffer and its attachments when the game closes.
      */
@@ -61,7 +77,11 @@ public class FrameBuffer {
      */
     public void bindFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
+
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
         GL11.glViewport(0, 0, width, height);
+        GL11.glOrtho(0, width, height, 0, 0, 1);
     }
 
     /**
@@ -71,7 +91,11 @@ public class FrameBuffer {
      */
     public void unbindFrameBuffer() {
         GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
+
+        GL11.glMatrixMode(GL11.GL_PROJECTION);
+        GL11.glLoadIdentity();
         GL11.glViewport(0, 0, Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
+        GL11.glOrtho(0, Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT), 0, 0, 1);
     }
 
     /**
