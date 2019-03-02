@@ -3,7 +3,6 @@ package rendering;
 import game.SettingType;
 import game.Settings;
 
-import org.lwjgl.*;
 import org.lwjgl.glfw.*;
 import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
@@ -34,7 +33,7 @@ public class WindowManager {
         // Configure GLFW
         glfwDefaultWindowHints(); // optional, the current window hints are already the default
         glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_TRUE); // the window will be resizable
+        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
 
         // Create the window
         window = glfwCreateWindow(Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT), "SpaceGame", NULL, NULL);
@@ -59,12 +58,16 @@ public class WindowManager {
         glfwShowWindow(window);
 
 
+        GL.createCapabilities();
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glViewport(0, 0,
+                Settings.get(SettingType.RESOLUTION_WIDTH),
+                Settings.get(SettingType.RESOLUTION_HEIGHT));
+
+
         lastFrameTime = getCurrentTime();
         updateFps();
-
-
-        GL.createCapabilities();
-        GL11.glViewport(0, 0, Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
     }
 
     public static void updateWindow() {
@@ -99,14 +102,6 @@ public class WindowManager {
         glfwSetErrorCallback(null).free();
     }
 
-    public static double getDelta() {
-        return delta;
-    }
-
-    public static int getFps() {
-        return fps;
-    }
-
     public static void centerWindow() {
         // Get the thread stack and push a new frame
         try (MemoryStack stack = stackPush()) {
@@ -126,6 +121,14 @@ public class WindowManager {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
         } // the stack frame is popped automatically
+    }
+
+    public static double getDelta() {
+        return delta;
+    }
+
+    public static int getFps() {
+        return fps;
     }
 
     private static double getCurrentTime() {
