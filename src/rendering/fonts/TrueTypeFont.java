@@ -30,6 +30,7 @@ public class TrueTypeFont {
     }
 
     public void drawFontTexture(int x, int y) {
+        glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, this.fontTextureId);
 
         glBegin(GL_QUADS);
@@ -47,9 +48,11 @@ public class TrueTypeFont {
         glVertex3f(x, y + fontUtil.getFontImageHeight(), 0);
 
         glEnd();
+        glDisable(GL_TEXTURE_2D);
     }
 
     public void drawText(String text, int xPosition, int yPosition) {
+        glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, this.fontTextureId);
         glBegin(GL_QUADS);
         int xTmp = xPosition;
@@ -81,5 +84,6 @@ public class TrueTypeFont {
             xTmp += width;
         }
         glEnd();
+        glDisable(GL_TEXTURE_2D);
     }
 }

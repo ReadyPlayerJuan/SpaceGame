@@ -1,198 +1,122 @@
 package rendering;
 
-import java.nio.ByteBuffer;
+/**
+ * Copyright (c) 2012, Matt DesLauriers All rights reserved.
+ *
+ *	Redistribution and use in source and binary forms, with or without
+ *	modification, are permitted provided that the following conditions are met:
+ *
+ *	* Redistributions of source code must retain the above copyright notice, this
+ *	  list of conditions and the following disclaimer.
+ *
+ *	* Redistributions in binary
+ *	  form must reproduce the above copyright notice, this list of conditions and
+ *	  the following disclaimer in the documentation and/or other materials provided
+ *	  with the distribution.
+ *
+ *	* Neither the name of the Matt DesLauriers nor the names
+ *	  of his contributors may be used to endorse or promote products derived from
+ *	  this software without specific prior written permission.
+ *
+ *	THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ *	AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ *	IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ *	ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ *	LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ *	CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ *	SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ *	INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ *	CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ *	ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ *	POSSIBILITY OF SUCH DAMAGE.
+ */
 
-import game.SettingType;
-import game.Settings;
-import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
-import org.lwjgl.opengl.GL14;
-import org.lwjgl.opengl.GL30;
+import static org.lwjgl.opengl.EXTFramebufferObject.*;
+import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL30.*;
+
+import main.SettingType;
+import main.Settings;
+import org.lwjgl.BufferUtils;
+
+import java.nio.ByteBuffer;
 
 public class FrameBuffer {
 
-    public static final int NONE = 0;
-    public static final int DEPTH_TEXTURE = 1;
-    public static final int DEPTH_RENDER_BUFFER = 2;
+    private int fboID;
+    private int textureID;
+    private int width, height;
 
-    private final int width;
-    private final int height;
-
-    private int frameBuffer;
-
-    private int colourTexture;
-    private int depthTexture;
-
-    private int depthBuffer;
-    private int colourBuffer;
-
-    /**
-     * Creates an FBO of a specified width and height, with the desired type of
-     * depth buffer attachment.
-     *
-     * @param width
-     *            - the width of the FBO.
-     * @param height
-     *            - the height of the FBO.
-     * @param depthBufferType
-     *            - an int indicating the type of depth buffer attachment that
-     *            this FBO should use.
-     */
-    public FrameBuffer(int width, int height, int depthBufferType) {
+    public FrameBuffer(int width, int height) {
         this.width = width;
         this.height = height;
-        initialiseFrameBuffer(depthBufferType);
-    }
 
-    public void draw(int x, int y, double scale) {
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
 
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
+        //texture
+        glEnable(GL_TEXTURE_2D);
+        textureID = glGenTextures();
+        glBindTexture(GL_TEXTURE_2D, textureID);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+        glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+        ByteBuffer buf = BufferUtils.createByteBuffer(width * height * 4);
+        glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+        glPixelStorei(GL_PACK_ALIGNMENT, 1);
+        glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, buf);
 
-// Draw a textured quad
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glTexCoord2f(0, 0); GL11.glVertex2d(x - width*scale*0.5,y - height*scale*0.5);
-        GL11.glTexCoord2f(0, 1); GL11.glVertex2d(x - width*scale*0.5,y + height*scale*0.5);
-        GL11.glTexCoord2f(1, 1); GL11.glVertex2d(x + width*scale*0.5,y + height*scale*0.5);
-        GL11.glTexCoord2f(1, 0); GL11.glVertex2d(x + width*scale*0.5,y - height*scale*0.5);
 
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        GL11.glEnd();
-    }
+        //frame buffer
+        fboID = glGenFramebuffersEXT();
+        glBindFramebufferEXT(GL_FRAMEBUFFER, fboID);
+        glFramebufferTexture2DEXT(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, textureID, 0);
+        int result = glCheckFramebufferStatusEXT(GL_FRAMEBUFFER);
+        if (result != GL_FRAMEBUFFER_COMPLETE) {
+            glBindFramebufferEXT(GL_FRAMEBUFFER, 0);
+            glDeleteFramebuffers(fboID);
 
-    /**
-     * Deletes the frame buffer and its attachments when the game closes.
-     */
-    public void cleanUp() {
-        GL30.glDeleteFramebuffers(frameBuffer);
-        GL11.glDeleteTextures(colourTexture);
-        GL11.glDeleteTextures(depthTexture);
-        GL30.glDeleteRenderbuffers(depthBuffer);
-        GL30.glDeleteRenderbuffers(colourBuffer);
-    }
-
-    /**
-     * Binds the frame buffer, setting it as the current render target. Anything
-     * rendered after this will be rendered to this FBO, and not to the screen.
-     */
-    public void bindFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_DRAW_FRAMEBUFFER, frameBuffer);
-
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glViewport(0, 0, width, height);
-        GL11.glOrtho(0, width, height, 0, 0, 1);
-    }
-
-    /**
-     * Unbinds the frame buffer, setting the default frame buffer as the current
-     * render target. Anything rendered after this will be rendered to the
-     * screen, and not this FBO.
-     */
-    public void unbindFrameBuffer() {
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, 0);
-
-        GL11.glMatrixMode(GL11.GL_PROJECTION);
-        GL11.glLoadIdentity();
-        GL11.glViewport(0, 0, Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
-        GL11.glOrtho(0, Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT), 0, 0, 1);
-    }
-
-    /**
-     * Binds the current FBO to be read from (not used in tutorial 43).
-     */
-    public void bindToRead() {
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, 0);
-        GL30.glBindFramebuffer(GL30.GL_READ_FRAMEBUFFER, frameBuffer);
-        GL11.glReadBuffer(GL30.GL_COLOR_ATTACHMENT0);
-    }
-
-    /**
-     * @return The ID of the texture containing the colour buffer of the FBO.
-     */
-    public int getColourTexture() {
-        return colourTexture;
-    }
-
-    /**
-     * @return The texture containing the FBOs depth buffer.
-     */
-    public int getDepthTexture() {
-        return depthTexture;
-    }
-
-    /**
-     * Creates the FBO along with a colour buffer texture attachment, and
-     * possibly a depth buffer.
-     *
-     * @param type
-     *            - the type of depth buffer attachment to be attached to the
-     *            FBO.
-     */
-    private void initialiseFrameBuffer(int type) {
-        createFrameBuffer();
-        createTextureAttachment();
-        if (type == DEPTH_RENDER_BUFFER) {
-            createDepthBufferAttachment();
-        } else if (type == DEPTH_TEXTURE) {
-            createDepthTextureAttachment();
+            System.exit(0);//throw new Exception("" + result);
         }
-        unbindFrameBuffer();
+        glBindFramebufferEXT(GL_FRAMEBUFFER, 0);
     }
 
-    /**
-     * Creates a new frame buffer object and sets the buffer to which drawing
-     * will occur - colour attachment 0. This is the attachment where the colour
-     * buffer texture is.
-     *
-     */
-    private void createFrameBuffer() {
-        frameBuffer = GL30.glGenFramebuffers();
-        GL30.glBindFramebuffer(GL30.GL_FRAMEBUFFER, frameBuffer);
-        GL11.glDrawBuffer(GL30.GL_COLOR_ATTACHMENT0);
+    public int getID() {
+        return fboID;
     }
 
-    /**
-     * Creates a texture and sets it as the colour buffer attachment for this
-     * FBO.
-     */
-    private void createTextureAttachment() {
-        colourTexture = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, colourTexture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL11.GL_RGBA8, width, height, 0, GL11.GL_RGBA, GL11.GL_UNSIGNED_BYTE,
-                (ByteBuffer) null);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_S, GL12.GL_CLAMP_TO_EDGE);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_WRAP_T, GL12.GL_CLAMP_TO_EDGE);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_COLOR_ATTACHMENT0, GL11.GL_TEXTURE_2D, colourTexture,
-                0);
+    public int getWidth() {
+        return width;
     }
 
-    /**
-     * Adds a depth buffer to the FBO in the form of a texture, which can later
-     * be sampled.
-     */
-    private void createDepthTextureAttachment() {
-        depthTexture = GL11.glGenTextures();
-        GL11.glBindTexture(GL11.GL_TEXTURE_2D, depthTexture);
-        GL11.glTexImage2D(GL11.GL_TEXTURE_2D, 0, GL14.GL_DEPTH_COMPONENT24, width, height, 0, GL11.GL_DEPTH_COMPONENT,
-                GL11.GL_FLOAT, (ByteBuffer) null);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MAG_FILTER, GL11.GL_LINEAR);
-        GL11.glTexParameteri(GL11.GL_TEXTURE_2D, GL11.GL_TEXTURE_MIN_FILTER, GL11.GL_LINEAR);
-        GL30.glFramebufferTexture2D(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL11.GL_TEXTURE_2D, depthTexture, 0);
+    public int getHeight() {
+        return height;
     }
 
-    /**
-     * Adds a depth buffer to the FBO in the form of a render buffer. This can't
-     * be used for sampling in the shaders.
-     */
-    private void createDepthBufferAttachment() {
-        depthBuffer = GL30.glGenRenderbuffers();
-        GL30.glBindRenderbuffer(GL30.GL_RENDERBUFFER, depthBuffer);
-        GL30.glRenderbufferStorage(GL30.GL_RENDERBUFFER, GL14.GL_DEPTH_COMPONENT24, width, height);
-        GL30.glFramebufferRenderbuffer(GL30.GL_FRAMEBUFFER, GL30.GL_DEPTH_ATTACHMENT, GL30.GL_RENDERBUFFER,
-                depthBuffer);
+    public int getTexture() {
+        return textureID;
     }
 
+    public void bindFrameBuffer() {
+        glViewport(0, 0, width, height);
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, width, height, 0, 0, 1);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, fboID);
+    }
+
+    public void unbindFrameBuffer() {
+        glViewport(0, 0, Settings.get(SettingType.RESOLUTION_WIDTH),
+                Settings.get(SettingType.RESOLUTION_HEIGHT));
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(0, Settings.get(SettingType.RESOLUTION_WIDTH),
+                Settings.get(SettingType.RESOLUTION_HEIGHT), 0, 0, 1);
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+    }
+
+    public void cleanUp() {
+        glBindFramebufferEXT(GL_FRAMEBUFFER_EXT, 0);
+        glDeleteFramebuffersEXT(fboID);
+        glDeleteTextures(textureID);
+    }
 }

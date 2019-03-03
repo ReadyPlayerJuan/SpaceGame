@@ -1,17 +1,15 @@
 package rendering;
 
-import game.SettingType;
-import game.Settings;
+import main.SettingType;
+import main.Settings;
 
 import org.lwjgl.glfw.*;
-import org.lwjgl.opengl.*;
 import org.lwjgl.system.*;
 
 import java.nio.*;
 
 import static org.lwjgl.glfw.Callbacks.*;
 import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.opengl.GL11.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
@@ -57,13 +55,6 @@ public class WindowManager {
         // Make the window visible
         glfwShowWindow(window);
 
-
-        GL.createCapabilities();
-        glMatrixMode(GL_PROJECTION);
-        glLoadIdentity();
-        glViewport(0, 0,
-                Settings.get(SettingType.RESOLUTION_WIDTH),
-                Settings.get(SettingType.RESOLUTION_HEIGHT));
 
 
         lastFrameTime = getCurrentTime();

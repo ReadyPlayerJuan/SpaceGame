@@ -1,12 +1,13 @@
-package game;
+package main;
+
+import main.SettingType;
 
 public class Settings {
     public static int[] current;
     private static final int[] defaults = {
-            800, //RESOLUTION_WIDTH
-            600, //RESOLUTION_HEIGHT
+            1400, //RESOLUTION_WIDTH
+            900, //RESOLUTION_HEIGHT
             0, //IS_FULLSCREEN
-            120, //FPS_CAP
     };
 
     public static int get(SettingType s) {

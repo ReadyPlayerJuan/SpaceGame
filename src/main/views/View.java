@@ -1,5 +1,6 @@
-package game;
+package main.views;
 
+import static org.lwjgl.opengl.GL11.*;
 import rendering.FrameBuffer;
 
 import java.util.LinkedList;
@@ -16,7 +17,7 @@ public abstract class View {
     public View(int width, int height) {
         this.width = width;
         this.height = height;
-        mainFrameBuffer = new FrameBuffer(width, height, FrameBuffer.NONE);
+        mainFrameBuffer = new FrameBuffer(width, height);
         subViews = new LinkedList<View>();
     }
 
@@ -30,10 +31,20 @@ public abstract class View {
         drawSelf();
     }
 
+    public void addSubView(View v) {
+        subViews.add(v);
+        shouldSortSubViews = true;
+    }
+
     private void updateSubViews(double delta) {
         if(shouldSortSubViews) { sortSubViews(); }
-        for(View v: subViews) {
+        for(int i = 0; i < subViews.size(); i++) {
+            View v = subViews.get(i);
             v.update(delta);
+            if(v.shouldBeDestroyed) {
+                subViews.remove(i);
+                i--;
+            }
         }
     }
 
@@ -48,7 +59,20 @@ public abstract class View {
     public abstract void drawSelf();
 
     public void drawMainView(int x, int y, double scale) {
-        mainFrameBuffer.draw(x, y, scale);
+        //mainFrameBuffer.draw(x, y, scale);
+        glEnable(GL_TEXTURE_2D);
+        glBindTexture(GL_TEXTURE_2D, mainFrameBuffer.getTexture());
+
+        glBegin(GL_QUADS);
+        glColor4f(1, 1, 1, 1);
+        glTexCoord2f(0, 0); glVertex2d(x - width*scale*0.5, y - height*scale*0.5);
+        glTexCoord2f(1, 0); glVertex2d(x + width*scale*0.5, y - height*scale*0.5);
+        glTexCoord2f(1, 1); glVertex2d(x + width*scale*0.5, y + height*scale*0.5);
+        glTexCoord2f(0, 1); glVertex2d(x - width*scale*0.5, y + height*scale*0.5);
+        glEnd();
+
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glDisable(GL_TEXTURE_2D);
     }
 
     private void sortSubViews() {
