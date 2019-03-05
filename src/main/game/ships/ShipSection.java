@@ -15,7 +15,7 @@ public class ShipSection {
     private ShipSection[] adjacentSections = {null, null, null, null};
     private Weapon[] weapons;
 
-    private ArrayList<ShipAction> actionInfo = new ArrayList<ShipAction>();
+    private ArrayList<ShipAction> actions = new ArrayList<ShipAction>();
 
     public ShipSection(Ship ship, int columnOffset, int maxHealth, ShipAction... baseActions) {
         this.ship = ship;
@@ -24,7 +24,7 @@ public class ShipSection {
         this.health = maxHealth;
 
         for(ShipAction a: baseActions) {
-            actionInfo.add(a);
+            actions.add(a);
         }
     }
 
@@ -33,7 +33,7 @@ public class ShipSection {
 
         for(Weapon w: weapons) {
             for(ShipAction wa: w.getWeaponActions()) {
-                actionInfo.add(wa);
+                actions.add(wa);
             }
         }
     }
@@ -43,7 +43,7 @@ public class ShipSection {
             w.update(delta);
         }
 
-        for(ShipAction a: actionInfo) {
+        for(ShipAction a: actions) {
             a.setFocused(isFocused);
         }
     }
@@ -64,5 +64,7 @@ public class ShipSection {
         return health > 1;
     }
 
-
+    public ArrayList<ShipAction> getActions() {
+        return actions;
+    }
 }

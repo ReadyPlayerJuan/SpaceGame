@@ -1,7 +1,9 @@
 package main.game.ships;
 
 import main.game.boards.Board;
+import main.game.enums.ShipActionState;
 import main.game.enums.Team;
+import main.input.InputCode;
 import main.views.GameView;
 
 import java.util.ArrayList;
@@ -29,6 +31,31 @@ public abstract class Ship {
     }
 
     public abstract void draw(Board currentBoard, int viewWidth, int viewHeight);
+
+    public void processInput(InputCode code) {
+        updateAvailableActions();
+
+        for(ShipAction a: availableActions) {
+            if(code.equals(a.getCode())) {
+                processAction(a);
+                break;
+            }
+        }
+    }
+
+    private void updateAvailableActions() {
+        availableActions.clear();
+        for(ShipAction a: globalActions) {
+            if(a.getState() == ShipActionState.AVAILABLE)
+                availableActions.add(a);
+        }
+        for(ShipSection section: sections) {
+            for(ShipAction a: section.getActions()) {
+                if(a.getState() == ShipActionState.AVAILABLE)
+                    availableActions.add(a);
+            }
+        }
+    }
 
     public abstract void processAction(ShipAction action);
 

@@ -24,6 +24,7 @@ public class GameView extends View {
     }
 
     public void processInput(InputCode code) {
+        playerShip.processInput(code);
         System.out.println("GAMEVIEW RECIEVED CODE " + code);
     }
 

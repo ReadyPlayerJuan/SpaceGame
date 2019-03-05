@@ -59,7 +59,7 @@ public class TestShip extends Ship {
             prevEvadePct = evadePct;
             evadePct = Util.skewPctPow(1 - (evadeTimer / evadeTimerMax), 2.0);
 
-            if(evadePct > 0.5 && prevEvadePct > 0.5) {
+            if(evadePct > 0.5 && prevEvadePct <= 0.5) {
                 colX += evadeDirection;
             }
             spriteColX = Util.mix(evadeStartX, evadeEndX, evadePct);

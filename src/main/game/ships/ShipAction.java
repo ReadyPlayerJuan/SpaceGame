@@ -22,6 +22,14 @@ public class ShipAction {
         this.focused = focused;
     }
 
+    public InputCode getCode() {
+        return code;
+    }
+
+    public void setCode(InputCode code) {
+        this.code = code;
+    }
+
     public ShipActionType getAction() {
         return action;
     }

@@ -5,9 +5,9 @@ import main.views.View;
 import java.util.ArrayList;
 
 public class InputCodeBuilder {
-    private static final double INPUT_SPEED_SHORT = 0.15;       //anything shorter than this will be considered 'short'
-    private static final double INPUT_SPEED_MEDIUM = 0.25;      //anything shorter than this can be considered either 'short' or 'long'
-    private static final double INPUT_SPEED_LONG = 0.60;        //anything shorter than this will be considered 'long',
+    private static final double INPUT_SPEED_SHORT = 0.12;       //anything shorter than this will be considered 'short'
+    private static final double INPUT_SPEED_MEDIUM = 0.20;      //anything shorter than this can be considered either 'short' or 'long'
+    private static final double INPUT_SPEED_LONG = 0.40;        //anything shorter than this will be considered 'long',
                                                                 //and anything longer than this will be considered 'very long'
 
     public static String debugString1 = "";
