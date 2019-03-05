@@ -64,7 +64,6 @@ public class WindowManager {
     public static void updateWindow() {
         glfwSwapBuffers(window); // swap the color buffers
         // Poll for window events. The key callback above will only be invoked during this call.
-        glfwPollEvents();
 
 
         updateFps();
@@ -73,6 +72,7 @@ public class WindowManager {
     private static void updateFps() {
         double currentFrameTime = glfwGetTime();
         delta = (currentFrameTime - lastFrameTime);
+        if(delta > 1) { delta = 0; }
         frameCount++;
         if(currentFrameTime - lastFpsUpdateTime > 1) {
             fps = frameCount;

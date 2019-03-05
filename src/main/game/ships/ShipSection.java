@@ -17,7 +17,7 @@ public class ShipSection {
 
     private ArrayList<ShipAction> actionInfo = new ArrayList<ShipAction>();
 
-    public ShipSection(Ship ship, int columnOffset, int maxHealth, ShipAction[] baseActions) {
+    public ShipSection(Ship ship, int columnOffset, int maxHealth, ShipAction... baseActions) {
         this.ship = ship;
         this.columnOffset = columnOffset;
         this.maxHealth = maxHealth;

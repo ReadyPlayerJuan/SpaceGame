@@ -4,6 +4,7 @@ import main.game.enums.ShipActionType;
 import main.game.enums.ShipActionState;
 import main.game.ships.ShipAction;
 import main.game.ships.ShipSection;
+import main.input.InputCode;
 
 public class TestWeapon1 extends Weapon {
     private double cooldown = 0;
@@ -12,7 +13,7 @@ public class TestWeapon1 extends Weapon {
     public TestWeapon1(ShipSection shipSection, ShipActionType fireAction) {
         super(shipSection);
 
-        actionFireWeapon = new ShipAction(fireAction);
+        actionFireWeapon = new ShipAction(fireAction, new InputCode());
 
         this.weaponActions = new ShipAction[] {
                 actionFireWeapon,

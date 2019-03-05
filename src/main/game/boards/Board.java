@@ -1,16 +1,16 @@
 package main.game.boards;
 
 import main.views.GameView;
-import org.lwjgl.opengl.GL11;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Board {
     private GameView parentView;
     public int numColumns;
 
-    private final double COLUMN_ASPECT_RATIO = 0.2;
+    private final double COLUMN_ASPECT_RATIO = 0.15;
     private final float LINE_WIDTH = 3.0f;
     private int viewWidth, viewHeight;
-    private int columnWidth, columnHeight;
+    public int columnWidth, columnHeight;
 
     public Board(GameView parentVew, int numColumns) {
         this.parentView = parentVew;
@@ -32,15 +32,15 @@ public class Board {
     }
 
     public void draw() {
-        GL11.glBegin(GL11.GL_QUADS);
-        GL11.glColor4f(1, 1, 1, 1);
+        glBegin(GL_QUADS);
+        glColor4f(1, 1, 1, 1);
         for(int i = 0; i < numColumns+1; i++) {
             float colx = i - ((numColumns) / 2.0f);
-            GL11.glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, 0);
-            GL11.glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, columnHeight);
-            GL11.glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, columnHeight);
-            GL11.glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, 0);
+            glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, 0);
+            glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, columnHeight);
+            glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, columnHeight);
+            glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, 0);
         }
-        GL11.glEnd();
+        glEnd();
     }
 }

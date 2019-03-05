@@ -2,19 +2,22 @@ package main.game.ships;
 
 import main.game.enums.ShipActionType;
 import main.game.enums.ShipActionState;
+import main.input.InputCode;
 
 public class ShipAction {
-    //private ActionCode code;
+    private InputCode code; //the code that activates this action
     private ShipActionType action; //the action that the code corresponds to
     private ShipActionState state = ShipActionState.AVAILABLE; //the state of the action or system
     private boolean focused = false; //whether or not the system's ship section is selected
 
-    public ShipAction(ShipActionType action) {
+    public ShipAction(ShipActionType action, InputCode code) {
         this.action = action;
+        this.code = code;
     }
 
-    public ShipAction(ShipActionType action, ShipActionState state, boolean focused) {
+    public ShipAction(ShipActionType action, InputCode code, ShipActionState state, boolean focused) {
         this.action = action;
+        this.code = code;
         this.state = state;
         this.focused = focused;
     }

@@ -1,6 +1,10 @@
 package main.views;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import main.input.InputCode;
+import main.input.InputCodeBuilder;
+import main.input.InputManager;
 import rendering.FrameBuffer;
 
 import java.util.LinkedList;
@@ -10,6 +14,7 @@ public abstract class View {
     protected int width, height;
     protected boolean shouldBeDestroyed = false;
     protected boolean shouldSortSubViews = false;
+    protected boolean isFocused = false;
 
     protected FrameBuffer mainFrameBuffer;
     protected LinkedList<View> subViews;
@@ -31,6 +36,17 @@ public abstract class View {
         drawSelf();
     }
 
+    public void setFocused(boolean focused) {
+        if(focused) {
+            isFocused = true;
+            InputManager.setFocusedView(this);
+        } else {
+            isFocused = false;
+        }
+    }
+
+    public abstract void processInput(InputCode code);
+
     public void addSubView(View v) {
         subViews.add(v);
         shouldSortSubViews = true;
@@ -42,7 +58,7 @@ public abstract class View {
             View v = subViews.get(i);
             v.update(delta);
             if(v.shouldBeDestroyed) {
-                subViews.remove(i);
+                subViews.remove(i).cleanUp();
                 i--;
             }
         }

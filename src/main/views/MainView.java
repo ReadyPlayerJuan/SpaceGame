@@ -1,5 +1,8 @@
 package main.views;
 
+import main.input.InputCode;
+import main.input.InputCodeBuilder;
+import main.input.InputType;
 import org.lwjgl.opengl.GL11;
 import rendering.WindowManager;
 import rendering.fonts.TrueTypeFont;
@@ -21,9 +24,15 @@ public class MainView extends View {
 
         gameView = new GameView(width, height);
         addSubView(gameView);
+
+        gameView.setFocused(true); //gameview recieves input
     }
 
     public void updateSelf(double delta) {
+
+    }
+
+    public void processInput(InputCode code) {
 
     }
 
@@ -36,6 +45,10 @@ public class MainView extends View {
 
         GL11.glColor3f(1f, 1f, 1f);
         debugFont.drawText("FPS " + WindowManager.getFps(), 0, height-24);
+
+
+        debugFont.drawText(InputCodeBuilder.debugString1, 0, height-24*2);
+        debugFont.drawText(InputCodeBuilder.debugString2, 0, height-24*3);
 
         mainFrameBuffer.unbindFrameBuffer();
     }
