@@ -3,7 +3,6 @@ package main.views;
 import static org.lwjgl.opengl.GL11.*;
 
 import main.input.InputCode;
-import main.input.InputCodeBuilder;
 import main.input.InputManager;
 import rendering.FrameBuffer;
 
@@ -74,21 +73,29 @@ public abstract class View {
     public abstract void updateSelf(double delta);
     public abstract void drawSelf();
 
-    public void drawMainView(int x, int y, double scale) {
+    /*public void drawMainView(double x, double y, double width, double height) {
         //mainFrameBuffer.draw(x, y, scale);
         glEnable(GL_TEXTURE_2D);
         glBindTexture(GL_TEXTURE_2D, mainFrameBuffer.getTexture());
 
         glBegin(GL_QUADS);
         glColor4f(1, 1, 1, 1);
-        glTexCoord2f(0, 0); glVertex2d(x - width*scale*0.5, y - height*scale*0.5);
-        glTexCoord2f(1, 0); glVertex2d(x + width*scale*0.5, y - height*scale*0.5);
-        glTexCoord2f(1, 1); glVertex2d(x + width*scale*0.5, y + height*scale*0.5);
-        glTexCoord2f(0, 1); glVertex2d(x - width*scale*0.5, y + height*scale*0.5);
+        glTexCoord2f(0, 0); glVertex2d(x - width*0.5, y - height*0.5);
+        glTexCoord2f(1, 0); glVertex2d(x + width*0.5, y - height*0.5);
+        glTexCoord2f(1, 1); glVertex2d(x + width*0.5, y + height*0.5);
+        glTexCoord2f(0, 1); glVertex2d(x - width*0.5, y + height*0.5);
         glEnd();
 
         glBindTexture(GL_TEXTURE_2D, 0);
         glDisable(GL_TEXTURE_2D);
+    }*/
+
+    /*public void drawMainView(int x, int y) {
+
+    }*/
+
+    public FrameBuffer getMainFrameBuffer() {
+        return mainFrameBuffer;
     }
 
     private void sortSubViews() {

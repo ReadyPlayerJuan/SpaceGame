@@ -2,25 +2,23 @@ package main.views;
 
 import main.input.InputCode;
 import main.input.InputCodeBuilder;
-import main.input.InputType;
-import org.lwjgl.opengl.GL11;
-import rendering.WindowManager;
+import rendering.FrameBuffer;
+import rendering.Graphics;
 import rendering.fonts.TrueTypeFont;
 
-public class MainView extends View {
-    private View gameView;
+import static org.lwjgl.opengl.GL11.*;
 
-    private TrueTypeFont debugFont;
+public class MainView extends View {
+    public View gameView;
+
+    private FrameBuffer layerFrameBuffer;
 
     public MainView(int width, int height) {
         super(width, height);
 
-        try {
-            debugFont = new TrueTypeFont("monofonto.ttf", 24);
-            debugFont.drawFontTexture(0, 0);
-        } catch (Throwable e) {
-            System.out.println(e.getMessage());
-        }
+        layerFrameBuffer = new FrameBuffer(width, height);
+
+        //mainFrameBuffer.setAutomaticOrtho(false);
 
         gameView = new GameView(width, height);
         addSubView(gameView);
@@ -38,18 +36,30 @@ public class MainView extends View {
 
     public void drawSelf() {
         mainFrameBuffer.bindFrameBuffer();
-        GL11.glClearColor(0f, 0f, 0f, 1);
-        GL11.glClear(GL11.GL_COLOR_BUFFER_BIT | GL11.GL_DEPTH_BUFFER_BIT);
+        //Graphics.setRenderTarget(mainFrameBuffer);
+        glClearColor(0f, 0f, 1f, 1);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-        gameView.drawMainView(width/2, height/2, 1);
+        //gameView.drawMainView(width/2, height/2, width, height);
+        gameView.getMainFrameBuffer().draw(width/2, height/2);
 
-        GL11.glColor3f(1f, 1f, 1f);
-        debugFont.drawText("FPS " + WindowManager.getFps(), 0, height-24);
-
-
-        debugFont.drawText(InputCodeBuilder.debugString1, 0, height-24*2);
-        debugFont.drawText(InputCodeBuilder.debugString2, 0, height-24*3);
+        glColor3f(1f, 0f, 1f);
+        Graphics.debugFont.drawText("FPS " + Graphics.getFps(), 0, height-24);
+        Graphics.debugFont.drawText(InputCodeBuilder.debugString1, 0, height-24*2);
+        Graphics.debugFont.drawText(InputCodeBuilder.debugString2, 0, height-24*3);
 
         mainFrameBuffer.unbindFrameBuffer();
+
+
+
+        //mainFrameBuffer.bindFrameBuffer();
+
+        //Graphics.layeredColorShader.drawFrameBuffer(layerFrameBuffer);
+
+        //mainFrameBuffer.unbindFrameBuffer();
+    }
+
+    public void cleanUp() {
+        super.cleanUp();
     }
 }

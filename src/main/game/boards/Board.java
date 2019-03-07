@@ -40,6 +40,12 @@ public class Board {
             glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, columnHeight);
             glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, columnHeight);
             glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, 0);
+            /*
+            glVertex2f((viewWidth/2 + colx * columnWidth - LINE_WIDTH/2) / viewWidth, 0 / viewHeight);
+            glVertex2f((viewWidth/2 + colx * columnWidth - LINE_WIDTH/2) / viewWidth, columnHeight / viewHeight);
+            glVertex2f((viewWidth/2 + colx * columnWidth + LINE_WIDTH/2) / viewWidth, columnHeight / viewHeight);
+            glVertex2f((viewWidth/2 + colx * columnWidth + LINE_WIDTH/2) / viewWidth, 0 / viewHeight);
+            */
         }
         glEnd();
     }

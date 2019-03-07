@@ -4,7 +4,14 @@ import main.SettingType;
 import main.Settings;
 
 import org.lwjgl.glfw.*;
+import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL20;
+import org.lwjgl.opengl.GL30;
 import org.lwjgl.system.*;
+import rendering.fonts.TrueTypeFont;
+import rendering.shaders.ShaderProgram;
+import rendering.shaders.layered_color.LayeredColorShader;
 
 import java.nio.*;
 
@@ -13,7 +20,7 @@ import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.system.MemoryStack.*;
 import static org.lwjgl.system.MemoryUtil.*;
 
-public class WindowManager {
+public class Graphics {
     private static double lastFrameTime;
     private static double delta;
     private static int frameCount;
@@ -21,6 +28,21 @@ public class WindowManager {
     private static int fps;
 
     public static long window;
+
+    public static TrueTypeFont debugFont;
+
+    public static LayeredColorShader layeredColorShader;
+
+    public static void initShaders() {
+        layeredColorShader = new LayeredColorShader();
+
+        try {
+            debugFont = new TrueTypeFont("monofonto.ttf", 24);
+            debugFont.drawFontTexture(0, 0);
+        } catch (Throwable e) {
+            System.out.println(e.getMessage());
+        }
+    }
 
     public static void createWindow() {
         GLFWErrorCallback.createPrint(System.err).set();
@@ -112,6 +134,22 @@ public class WindowManager {
                     (vidmode.height() - pHeight.get(0)) / 2
             );
         } // the stack frame is popped automatically
+    }
+
+    /*public static void setRenderTarget(FrameBuffer f) {
+        if(currentRenderTarget != null)
+            currentRenderTarget.unbindFrameBuffer();
+
+        currentRenderTarget = f;
+        if(currentRenderTarget != null) {
+            currentRenderTarget.bindFrameBuffer();
+        } else {
+            //glOrtho()
+        }
+    }*/
+
+    public static void cleanUp() {
+        layeredColorShader.cleanUp();
     }
 
     public static double getDelta() {

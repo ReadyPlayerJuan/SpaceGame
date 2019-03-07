@@ -3,42 +3,49 @@ package main;
 import main.input.InputManager;
 import main.views.MainView;
 import main.views.View;
-import rendering.FrameBuffer;
 import rendering.Loader;
-import rendering.WindowManager;
+import rendering.Graphics;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
+import rendering.shaders.layered_color.LayeredColorShader;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
 public class Main {
-    private View mainView;
+    private MainView mainView;
 
     public void run() {
         Settings.loadSettings();
 
-        WindowManager.createWindow();
-        InputManager.init(WindowManager.window);
+        Graphics.createWindow();
+        InputManager.init(Graphics.window);
         initGL();
+        Graphics.initShaders();
 
         mainView = new MainView(Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
+        LayeredColorShader shader = new LayeredColorShader();
 
-        while (!glfwWindowShouldClose(WindowManager.window)) {
+        while (!glfwWindowShouldClose(Graphics.window)) {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            InputManager.update(WindowManager.getDelta());
+            InputManager.update(Graphics.getDelta());
 
-            mainView.update(WindowManager.getDelta());
+            mainView.update(Graphics.getDelta());
             mainView.draw();
-            mainView.drawMainView(mainView.getWidth()/2, mainView.getHeight()/2, 1.0);
 
-            WindowManager.updateWindow();
+            //shader.start();
+            glOrtho(0, mainView.getWidth(), 0, mainView.getHeight(), 0, 1);
+            mainView.getMainFrameBuffer().draw(mainView.getWidth()/2, mainView.getHeight()/2);
+            //shader.stop();
+
+            Graphics.updateWindow();
         }
 
-        WindowManager.destroyWindow();
+        Graphics.destroyWindow();
+        Graphics.cleanUp();
         Loader.cleanUp();
         mainView.cleanUp();
     }
@@ -57,8 +64,8 @@ public class Main {
         GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
         GL11.glDisable(GL11.GL_DEPTH_TEST);
 
-        glMatrixMode (GL_MODELVIEW);                                // Select The Modelview Matrix
-        glLoadIdentity ();                                          // Reset The Modelview Matrix
+        glMatrixMode(GL_MODELVIEW);                                // Select The Modelview Matrix
+        glLoadIdentity();                                          // Reset The Modelview Matrix
 
 
     }

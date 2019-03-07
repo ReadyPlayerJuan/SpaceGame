@@ -11,6 +11,7 @@ import main.game.weapons.Weapon;
 import main.input.InputCode;
 import main.input.InputType;
 import main.views.GameView;
+import rendering.Graphics;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -107,7 +108,7 @@ public class TestShip extends Ship {
         glBegin(GL_QUADS);
         glColor4f(1, 0, 0, 1);
         double shipX = viewWidth/2 + currentBoard.columnWidth * (spriteColX + shipWidth/2.0 + currentBoard.numColumns/-2.0);
-        double shipY = viewHeight/2;
+        double shipY = viewHeight/4;
         double shipW = currentBoard.columnWidth * shipWidth * 0.8;
         double shipH = shipW * 0.75;
         glVertex2d(shipX - shipW/2, shipY - shipH/2);
@@ -115,5 +116,7 @@ public class TestShip extends Ship {
         glVertex2d(shipX + shipW/2, shipY + shipH/2);
         glVertex2d(shipX - shipW/2, shipY + shipH/2);
         glEnd();
+        glColor4f(1, 1, 1, 1);
+        Graphics.debugFont.drawText("TEST SHIP!", (int)shipX, (int)shipY);
     }
 }

@@ -33,6 +33,14 @@ public class Loader {
         return new RawModel(vaoID, positions.length / dimensions);
     }
 
+    public static RawModel loadToVAO(float[] positions, float[] textureCoords) {
+        int vaoID = createVAO();
+        storeDataInAttributeList(0, 2, positions);
+        storeDataInAttributeList(1, 2, textureCoords);
+        unbindVAO();
+        return new RawModel(vaoID, positions.length / 2);
+    }
+
     public static void cleanUp() {
         for(int vao: vaos) {
             GL30.glDeleteVertexArrays(vao);
