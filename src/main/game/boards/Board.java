@@ -1,6 +1,8 @@
 package main.game.boards;
 
 import main.views.GameView;
+import rendering.Graphics;
+
 import static org.lwjgl.opengl.GL11.*;
 
 public class Board {
@@ -32,21 +34,29 @@ public class Board {
     }
 
     public void draw() {
-        glBegin(GL_QUADS);
-        glColor4f(1, 1, 1, 1);
+        Graphics.drawQuad(
+                0, 0,
+                viewWidth, 0,
+                viewWidth, viewHeight,
+                0, viewHeight);
+        //glBegin(GL_QUADS);
+        //glColor4f(1, 1, 1, 1);
+        Graphics.setColorShadeFactor(2);
         for(int i = 0; i < numColumns+1; i++) {
             float colx = i - ((numColumns) / 2.0f);
+            Graphics.drawQuad(
+                    viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, 0,
+                    viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, columnHeight,
+                    viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, columnHeight,
+                    viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, 0);
+            /*
             glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, 0);
             glVertex2f(viewWidth/2 + colx * columnWidth - LINE_WIDTH/2, columnHeight);
             glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, columnHeight);
             glVertex2f(viewWidth/2 + colx * columnWidth + LINE_WIDTH/2, 0);
-            /*
-            glVertex2f((viewWidth/2 + colx * columnWidth - LINE_WIDTH/2) / viewWidth, 0 / viewHeight);
-            glVertex2f((viewWidth/2 + colx * columnWidth - LINE_WIDTH/2) / viewWidth, columnHeight / viewHeight);
-            glVertex2f((viewWidth/2 + colx * columnWidth + LINE_WIDTH/2) / viewWidth, columnHeight / viewHeight);
-            glVertex2f((viewWidth/2 + colx * columnWidth + LINE_WIDTH/2) / viewWidth, 0 / viewHeight);
             */
         }
-        glEnd();
+        Graphics.resetColorShadeFactor();
+        //glEnd();
     }
 }

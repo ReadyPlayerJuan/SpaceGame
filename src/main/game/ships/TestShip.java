@@ -12,6 +12,7 @@ import main.input.InputCode;
 import main.input.InputType;
 import main.views.GameView;
 import rendering.Graphics;
+import rendering.WindowManager;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -105,18 +106,27 @@ public class TestShip extends Ship {
     }
 
     public void draw(Board currentBoard, int viewWidth, int viewHeight) {
-        glBegin(GL_QUADS);
+        //glBegin(GL_QUADS);
         glColor4f(1, 0, 0, 1);
-        double shipX = viewWidth/2 + currentBoard.columnWidth * (spriteColX + shipWidth/2.0 + currentBoard.numColumns/-2.0);
-        double shipY = viewHeight/4;
-        double shipW = currentBoard.columnWidth * shipWidth * 0.8;
-        double shipH = shipW * 0.75;
-        glVertex2d(shipX - shipW/2, shipY - shipH/2);
+        float shipX = viewWidth/2f + currentBoard.columnWidth * ((float)spriteColX + shipWidth/2.0f + currentBoard.numColumns/-2.0f);
+        float shipY = viewHeight/4f;
+        float shipW = currentBoard.columnWidth * shipWidth * 0.8f;
+        float shipH = shipW * 0.75f;
+        Graphics.drawQuad(
+                shipX - shipW/2, shipY - shipH/2,
+                shipX + shipW/2, shipY - shipH/2,
+                shipX + shipW/2, shipY + shipH/2,
+                shipX - shipW/2, shipY + shipH/2);
+        Graphics.drawQuad(
+                shipX - shipW/2+20, shipY - shipH/2+20,
+                shipX + shipW/2+20, shipY - shipH/2+20,
+                shipX + shipW/2+20, shipY + shipH/2+20,
+                shipX - shipW/2+20, shipY + shipH/2+20);
+        /*glVertex2d(shipX - shipW/2, shipY - shipH/2);
         glVertex2d(shipX + shipW/2, shipY - shipH/2);
         glVertex2d(shipX + shipW/2, shipY + shipH/2);
         glVertex2d(shipX - shipW/2, shipY + shipH/2);
-        glEnd();
-        glColor4f(1, 1, 1, 1);
-        Graphics.debugFont.drawText("TEST SHIP!", (int)shipX, (int)shipY);
+        glEnd();*/
+        //WindowManager.debugFont.drawText("TEST", (int)shipX, (int)shipY);
     }
 }

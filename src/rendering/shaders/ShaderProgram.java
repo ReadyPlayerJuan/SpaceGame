@@ -81,6 +81,10 @@ public abstract class ShaderProgram {
         GL20.glUniform1f(location, value);
     }
 
+    protected void loadFloatArray(int location, float[] value) {
+        GL20.glUniform1fv(location, value);
+    }
+
     protected void loadVector(int location, float vecX, float vecY) {
         GL20.glUniform2f(location, vecX, vecY);
     }
@@ -91,6 +95,10 @@ public abstract class ShaderProgram {
 
     protected void loadVector(int location, float vecX, float vecY, float vecZ, float vecW) {
         GL20.glUniform4f(location, vecX, vecY, vecZ, vecW);
+    }
+
+    protected void loadVector3Array(int location, float[] value) {
+        GL20.glUniform3fv(location, value);
     }
 
     protected void loadBoolean(int location, boolean value) {

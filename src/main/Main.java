@@ -2,49 +2,49 @@ package main;
 
 import main.input.InputManager;
 import main.views.MainView;
-import main.views.View;
-import rendering.Loader;
 import rendering.Graphics;
+import rendering.Loader;
+import rendering.WindowManager;
 
 import org.lwjgl.opengl.GL;
 import org.lwjgl.opengl.GL11;
-import rendering.shaders.layered_color.LayeredColorShader;
+import rendering.colors.ColorThemeManager;
 
 import static org.lwjgl.glfw.GLFW.*;
 import static org.lwjgl.opengl.GL11.*;
 
-public class Main {
-    private MainView mainView;
 
+public class Main {
     public void run() {
         Settings.loadSettings();
-
-        Graphics.createWindow();
-        InputManager.init(Graphics.window);
+        WindowManager.createWindow();
         initGL();
-        Graphics.initShaders();
 
-        mainView = new MainView(Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
-        LayeredColorShader shader = new LayeredColorShader();
+        InputManager.init(WindowManager.window);
+        WindowManager.init();
+        ColorThemeManager.init();
+        Graphics.init();
 
-        while (!glfwWindowShouldClose(Graphics.window)) {
+        MainView mainView = new MainView(Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT));
+
+        while (!glfwWindowShouldClose(WindowManager.window)) {
             glClearColor(0.0f, 0.0f, 0.0f, 0.0f);
             glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT); // clear the framebuffer
 
-            InputManager.update(Graphics.getDelta());
+            InputManager.update(WindowManager.getDelta());
 
-            mainView.update(Graphics.getDelta());
+            mainView.update(WindowManager.getDelta());
             mainView.draw();
 
-            //shader.start();
-            glOrtho(0, mainView.getWidth(), 0, mainView.getHeight(), 0, 1);
-            mainView.getMainFrameBuffer().draw(mainView.getWidth()/2, mainView.getHeight()/2);
-            //shader.stop();
+            glOrtho(-1, 1, -1, 1, 0, 1);
+            mainView.getMainFrameBuffer().draw(0, 0, 2, 2);
 
-            Graphics.updateWindow();
+            WindowManager.updateWindow();
         }
 
-        Graphics.destroyWindow();
+        WindowManager.destroyWindow();
+        WindowManager.cleanUp();
+        ColorThemeManager.cleanUp();
         Graphics.cleanUp();
         Loader.cleanUp();
         mainView.cleanUp();

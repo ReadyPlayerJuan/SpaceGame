@@ -1,166 +1,180 @@
 package rendering;
 
-import main.SettingType;
-import main.Settings;
-
-import org.lwjgl.glfw.*;
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL13;
+import org.lwjgl.opengl.GL15;
 import org.lwjgl.opengl.GL20;
 import org.lwjgl.opengl.GL30;
-import org.lwjgl.system.*;
-import rendering.fonts.TrueTypeFont;
-import rendering.shaders.ShaderProgram;
+import rendering.colors.ColorRegion;
+import rendering.colors.ColorTheme;
+import rendering.colors.ColorThemeManager;
 import rendering.shaders.layered_color.LayeredColorShader;
 
-import java.nio.*;
+import java.nio.FloatBuffer;
 
-import static org.lwjgl.glfw.Callbacks.*;
-import static org.lwjgl.glfw.GLFW.*;
-import static org.lwjgl.system.MemoryStack.*;
-import static org.lwjgl.system.MemoryUtil.*;
+import static org.lwjgl.opengl.GL11.*;
 
 public class Graphics {
-    private static double lastFrameTime;
-    private static double delta;
-    private static int frameCount;
-    private static double lastFpsUpdateTime;
-    private static int fps;
-
-    public static long window;
-
-    public static TrueTypeFont debugFont;
-
     public static LayeredColorShader layeredColorShader;
 
-    public static void initShaders() {
+    public static final int NUM_COLOR_REGIONS = 5;
+    public static final int NUM_COLORS_PER_REGION = 5;
+    private static boolean drawingColorRegions = false;
+    private static int colorShadeFactor = 1;
+    private static float currentRegionShade = 0;
+
+    private static final int MAX_QUADS = 100;
+    private static final FloatBuffer buffer = BufferUtils.createFloatBuffer(MAX_QUADS * 8);
+    private static float[] quadVboData;
+    private static int arrayIndex = 0;
+    private static int vao;
+    private static int vbo;
+
+    public static void init() {
         layeredColorShader = new LayeredColorShader();
+        layeredColorShader.start();
+        layeredColorShader.loadColorTheme(ColorThemeManager.getColorTheme(ColorTheme.GAME));
+        layeredColorShader.stop();
 
-        try {
-            debugFont = new TrueTypeFont("monofonto.ttf", 24);
-            debugFont.drawFontTexture(0, 0);
-        } catch (Throwable e) {
-            System.out.println(e.getMessage());
-        }
+        /*float n = 99;
+        float[] data = new float[] {-n, -n, n, -n, n, n, -n, n};
+
+        vao = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vao);
+
+        vbo = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, data.length * 4, GL15.GL_STREAM_DRAW);
+        GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GL30.glBindVertexArray(0);
+
+
+        FloatBuffer buffer = BufferUtils.createFloatBuffer(data.length);
+        buffer.put(data);
+        buffer.flip();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);*/
+
+
+
+        vao = GL30.glGenVertexArrays();
+        GL30.glBindVertexArray(vao);
+
+        vbo = GL15.glGenBuffers();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, MAX_QUADS * 8 * 4, GL15.GL_STREAM_DRAW);
+        GL20.glVertexAttribPointer(0, 2, GL11.GL_FLOAT, false, 0, 0);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+        GL30.glBindVertexArray(0);
     }
 
-    public static void createWindow() {
-        GLFWErrorCallback.createPrint(System.err).set();
+    public static void drawWithLayerFilter(FrameBuffer frameBuffer, ColorTheme theme) {
+        layeredColorShader.start();
+        layeredColorShader.loadColorTheme(ColorThemeManager.getColorTheme(theme));
 
-        if (!glfwInit())
-            throw new IllegalStateException("Unable to initialize GLFW");
+        glMatrixMode(GL_PROJECTION);
+        glLoadIdentity();
+        glOrtho(-1, 1, -1, 1, 0, 1);
+        frameBuffer.draw(0, 0, 2, 2);
 
-        // Configure GLFW
-        glfwDefaultWindowHints(); // optional, the current window hints are already the default
-        glfwWindowHint(GLFW_VISIBLE, GLFW_FALSE); // the window will stay hidden after creation
-        glfwWindowHint(GLFW_RESIZABLE, GLFW_FALSE); // the window will be resizable
-
-        // Create the window
-        window = glfwCreateWindow(Settings.get(SettingType.RESOLUTION_WIDTH), Settings.get(SettingType.RESOLUTION_HEIGHT), "SpaceGame", NULL, NULL);
-        if (window == NULL)
-            throw new RuntimeException("Failed to create the GLFW window");
-
-        // Setup a key callback. It will be called every time a key is pressed, repeated or released.
-        /*glfwSetKeyCallback(window, (window, key, scancode, action, mods) -> {
-            if (key == GLFW_KEY_ESCAPE && action == GLFW_RELEASE)
-                glfwSetWindowShouldClose(window, true); // We will detect this in the rendering loop
-        });*/
-
-        // Make the OpenGL context current
-        glfwMakeContextCurrent(window);
-        // Enable v-sync
-        glfwSwapInterval(1);
-
-        // Center the window
-        centerWindow();
-
-        // Make the window visible
-        glfwShowWindow(window);
-
-
-
-        lastFrameTime = getCurrentTime();
-        updateFps();
+        layeredColorShader.stop();
     }
 
-    public static void updateWindow() {
-        glfwSwapBuffers(window); // swap the color buffers
-        // Poll for window events. The key callback above will only be invoked during this call.
+    public static void startDrawingColorRegion(ColorRegion region) {
+        if(drawingColorRegions) finishDrawingColorRegion();
 
+        currentRegionShade = (float)region.i / NUM_COLORS_PER_REGION;
+        drawingColorRegions = true;
 
-        updateFps();
+        arrayIndex = 0;
+        quadVboData = new float[MAX_QUADS * 8];
     }
 
-    private static void updateFps() {
-        double currentFrameTime = glfwGetTime();
-        delta = (currentFrameTime - lastFrameTime);
-        if(delta > 1) { delta = 0; }
-        frameCount++;
-        if(currentFrameTime - lastFpsUpdateTime > 1) {
-            fps = frameCount;
-            frameCount = 0;
-            lastFpsUpdateTime = lastFrameTime;
-            System.out.println(fps);
-        }
-        lastFrameTime = currentFrameTime;
+    public static void finishDrawingColorRegion() {
+        drawingColorRegions = false;
+
+        buffer.clear();
+        buffer.put(quadVboData);
+        buffer.flip();
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, vbo);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, buffer.capacity() * 4, GL15.GL_STREAM_DRAW);
+        GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, buffer);
+        GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
+
+
+        GL30.glBindVertexArray(vao);
+        GL20.glEnableVertexAttribArray(0);
+
+        glColorMask(true, true, false, false);
+        glBlendFunc(GL_ONE, GL_ZERO);
+        glColor3f(0, currentRegionShade, 0);
+        GL11.glDrawArrays(GL11.GL_QUADS, 0, arrayIndex);
+
+        glColorMask(true, false, false, false);
+        glBlendFunc(GL_ONE, GL_ONE);
+        glColor3f((float)1.0f / NUM_COLORS_PER_REGION, 0, 0);
+        GL11.glDrawArrays(GL11.GL_QUADS, 0, arrayIndex);
+
+        GL20.glDisableVertexAttribArray(0);
+        GL30.glBindVertexArray(0);
+
+
+
+        glColorMask(true, true, true, true);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public static void destroyWindow() {
-        // Free the window callbacks and destroy the window
-        glfwFreeCallbacks(window);
-        glfwDestroyWindow(window);
-
-        // Terminate GLFW and free the error callback
-        glfwTerminate();
-        glfwSetErrorCallback(null).free();
+    public static void setColorShadeFactor(int factor) {
+        colorShadeFactor = factor;
     }
 
-    public static void centerWindow() {
-        // Get the thread stack and push a new frame
-        try (MemoryStack stack = stackPush()) {
-            IntBuffer pWidth = stack.mallocInt(1); // int*
-            IntBuffer pHeight = stack.mallocInt(1); // int*
-
-            // Get the window size passed to glfwCreateWindow
-            glfwGetWindowSize(window, pWidth, pHeight);
-
-            // Get the resolution of the primary monitor
-            GLFWVidMode vidmode = glfwGetVideoMode(glfwGetPrimaryMonitor());
-
-            // Center the window
-            glfwSetWindowPos(
-                    window,
-                    (vidmode.width() - pWidth.get(0)) / 2,
-                    (vidmode.height() - pHeight.get(0)) / 2
-            );
-        } // the stack frame is popped automatically
+    public static void resetColorShadeFactor() {
+        colorShadeFactor = 1;
     }
 
-    /*public static void setRenderTarget(FrameBuffer f) {
-        if(currentRenderTarget != null)
-            currentRenderTarget.unbindFrameBuffer();
+    public static void drawQuad(float... positions) {
+        if(drawingColorRegions) {
+            glEnable(GL_BLEND);
 
-        currentRenderTarget = f;
-        if(currentRenderTarget != null) {
-            currentRenderTarget.bindFrameBuffer();
+            /*glColorMask(false, true, false, false);
+            glBlendFunc(GL_ONE, GL_ZERO);
+            glColor3f(0, currentRegionShade, 0);
+            glBegin(GL_QUADS);
+            drawVertices(positions);
+            glEnd();*/
+
+            /*glColorMask(true, false, false, false);
+            glBlendFunc(GL_ONE, GL_ONE);
+            glColor3f((float)colorShadeFactor / NUM_COLORS_PER_REGION, 0, 0);
+            glBegin(GL_QUADS);
+            drawVertices(positions);
+            glEnd();*/
+
+            for(int i = 0; i < 8; i++) {
+                quadVboData[arrayIndex++] = positions[i];
+            }
+
+            glColorMask(true, true, true, true);
+            glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         } else {
-            //glOrtho()
+            glBegin(GL_QUADS);
+            drawVertices(positions);
+            glEnd();
         }
-    }*/
+    }
+
+    private static void drawVertices(float... positions) {
+        for(int i = 0; i < positions.length; i += 2) {
+            glVertex2d(positions[i], positions[i+1]);
+        }
+    }
 
     public static void cleanUp() {
         layeredColorShader.cleanUp();
-    }
-
-    public static double getDelta() {
-        return delta;
-    }
-
-    public static int getFps() {
-        return fps;
-    }
-
-    private static double getCurrentTime() {
-        return lastFrameTime;
+        GL30.glDeleteVertexArrays(vao);
+        GL30.glDeleteBuffers(vbo);
     }
 }

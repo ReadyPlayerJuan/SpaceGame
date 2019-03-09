@@ -7,7 +7,8 @@ import main.game.ships.TestShip;
 import main.input.InputCode;
 import rendering.FrameBuffer;
 import rendering.Graphics;
-import rendering.shaders.layered_color.LayeredColorShader;
+import rendering.colors.ColorRegion;
+import rendering.colors.ColorTheme;
 
 import static  org.lwjgl.opengl.GL11.*;
 
@@ -37,23 +38,27 @@ public class GameView extends View {
     }
 
     public void drawSelf() {
-        mainFrameBuffer.bindFrameBuffer();
-        //Graphics.setRenderTarget(mainFrameBuffer);
+        layerFrameBuffer.bindFrameBuffer();
+        //WindowManager.setRenderTarget(mainFrameBuffer);
         glClearColor(0, 0, 0, 1);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
+        Graphics.startDrawingColorRegion(ColorRegion.GAME_BACKGROUND);
         currentBoard.draw();
+        Graphics.startDrawingColorRegion(ColorRegion.GAME_PLAYER_SHIP);
         playerShip.draw(currentBoard, width, height);
+        Graphics.finishDrawingColorRegion();
+
+        layerFrameBuffer.unbindFrameBuffer();
+
+
+
+        mainFrameBuffer.bindFrameBuffer();
+
+        //layerFrameBuffer.draw(0, 0, 2, 2);
+        Graphics.drawWithLayerFilter(layerFrameBuffer, ColorTheme.GAME);
 
         mainFrameBuffer.unbindFrameBuffer();
-
-
-
-        /*mainFrameBuffer.bindFrameBuffer();
-
-        Graphics.layeredColorShader.drawFrameBuffer(layerFrameBuffer);
-
-        mainFrameBuffer.unbindFrameBuffer();*/
     }
 
     public void cleanUp() {
