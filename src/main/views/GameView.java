@@ -51,8 +51,8 @@ public class GameView extends View {
         currentBoard.draw(camera);
         Graphics.startDrawingColorRegion(ColorRegion.GAME_PLAYER_SHIP);
         playerShip.draw(currentBoard, camera, width, height);
-        //Graphics.startDrawingColorRegion(ColorRegion.GAME_ENEMY_SHIP);
-        //enemyShip.draw(currentBoard, camera, width, height);
+        Graphics.startDrawingColorRegion(ColorRegion.GAME_ENEMY_SHIP);
+        enemyShip.draw(currentBoard, camera, width, height);
         Graphics.finishDrawingColorRegion();
 
         layerFrameBuffer.unbindFrameBuffer();

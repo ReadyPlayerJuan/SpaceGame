@@ -48,16 +48,16 @@ public class Board {
         Graphics.drawQuad(
                 -1, -1,
                 1, -1,
-                1, 1,
-                -1, 1);
+                -1, 1,
+                1, 1);
 
         for(int i = 0; i < boardColumns+1; i++) {
             float colx = i - ((boardColumns) / 2.0f)  - (camera.centerX / boardColumnWidth);
             Graphics.drawQuad(
                     colx * screenUnitX - lineWidth/2, -1,
                     colx * screenUnitX - lineWidth/2, 1,
-                    colx * screenUnitX + lineWidth/2, 1,
-                    colx * screenUnitX + lineWidth/2, -1);
+                    colx * screenUnitX + lineWidth/2, -1,
+                    colx * screenUnitX + lineWidth/2, 1);
         }
     }
 }

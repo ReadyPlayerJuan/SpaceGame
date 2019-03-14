@@ -9,6 +9,7 @@ import rendering.shaders.color_vertex.ColorVertexShader;
 import rendering.shaders.layered_color.LayeredColorShader;
 
 import java.nio.FloatBuffer;
+import java.nio.IntBuffer;
 
 import static org.lwjgl.opengl.GL11.*;
 
@@ -23,11 +24,14 @@ public class Graphics {
 
     private static final int MAX_QUADS = 100;
     private static final FloatBuffer vertexBuffer = BufferUtils.createFloatBuffer(MAX_QUADS * 8);
-    private static final FloatBuffer wobbleBuffer = BufferUtils.createFloatBuffer(MAX_QUADS * 4);
+    private static final FloatBuffer wobbleBuffer = BufferUtils.createFloatBuffer(MAX_QUADS * 8);
+    private static final IntBuffer indexBuffer = BufferUtils.createIntBuffer(MAX_QUADS * 8);
     private static float[] quadVboData;
     private static float[] wobbleVboData;
+    private static int[] indexVboData;
     private static int quadArrayIndex = 0;
     private static int wobbleArrayIndex = 0;
+    private static int indexArrayIndex = 0;
     private static int vao;
     private static int vertexVbo, wobbleVbo;
 
@@ -50,7 +54,7 @@ public class Graphics {
 
         wobbleVbo = GL15.glGenBuffers();
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, wobbleVbo);
-        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, MAX_QUADS * 4 * 4, GL15.GL_STREAM_DRAW);
+        GL15.glBufferData(GL15.GL_ARRAY_BUFFER, MAX_QUADS * 8 * 4, GL15.GL_STREAM_DRAW);
         GL20.glVertexAttribPointer(1, 2, GL11.GL_FLOAT, false, 0, 0);
 
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
@@ -82,12 +86,19 @@ public class Graphics {
 
         quadArrayIndex = 0;
         wobbleArrayIndex = 0;
+        indexArrayIndex = 0;
         quadVboData = new float[MAX_QUADS * 8];
-        wobbleVboData = new float[MAX_QUADS * 4];
+        wobbleVboData = new float[MAX_QUADS * 8];
+        indexVboData = new int[MAX_QUADS * 8];
     }
 
     public static void finishDrawingColorRegion() {
         drawingColorRegions = false;
+
+        /*for(int i = 0; i < quadArrayIndex; i++) System.out.print(quadVboData[i] + " ");
+        System.out.println();
+        for(int i = 0; i < indexArrayIndex; i++) System.out.print(indexVboData[i] + " ");
+        System.out.println();*/
 
         vertexBuffer.clear();
         vertexBuffer.put(quadVboData);
@@ -105,6 +116,10 @@ public class Graphics {
         GL15.glBufferSubData(GL15.GL_ARRAY_BUFFER, 0, wobbleBuffer);
         GL15.glBindBuffer(GL15.GL_ARRAY_BUFFER, 0);
 
+        indexBuffer.clear();
+        indexBuffer.put(indexVboData);
+        indexBuffer.flip();
+
 
         GL30.glBindVertexArray(vao);
         GL20.glEnableVertexAttribArray(0);
@@ -114,15 +129,13 @@ public class Graphics {
 
         glColorMask(true, true, false, false);
         glBlendFunc(GL_ONE, GL_ZERO);
-        //glColor3f(0, currentRegionShade, 0);
         colorVertexShader.setColor(0, currentRegionShade, 0);
-        GL11.glDrawArrays(GL11.GL_QUADS, 0, quadArrayIndex);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, indexBuffer);
 
         glColorMask(true, false, false, false);
         glBlendFunc(GL_ONE, GL_ONE);
-        //glColor3f(1.0f / NUM_COLORS_PER_REGION, 0, 0);
         colorVertexShader.setColor(1.0f / NUM_COLORS_PER_REGION, 0, 0);
-        GL11.glDrawArrays(GL11.GL_QUADS, 0, quadArrayIndex);
+        GL11.glDrawElements(GL11.GL_TRIANGLES, indexBuffer);
 
         colorVertexShader.stop();
         GL20.glDisableVertexAttribArray(1);
@@ -135,55 +148,64 @@ public class Graphics {
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
     }
 
-    public static void drawQuad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
-        if(drawingColorRegions) {
-            quadVboData[quadArrayIndex++] = x1;
-            quadVboData[quadArrayIndex++] = y1;
-            quadVboData[quadArrayIndex++] = x2;
-            quadVboData[quadArrayIndex++] = y2;
-            quadVboData[quadArrayIndex++] = x3;
-            quadVboData[quadArrayIndex++] = y3;
-            quadVboData[quadArrayIndex++] = x4;
-            quadVboData[quadArrayIndex++] = y4;
+    public static void drawTriangles(float[] vertices, int[] indices, float... data) {
+        for(int d = 0; d < data.length / 7; d++) {
+            float cenx = data[d*7];
+            float ceny = data[d*7 + 1];
+            float rotation = data[d*7 + 2];
+            float xscale = data[d*7 + 3];
+            float yscale = data[d*7 + 4];
+            float wobble = data[d*7 + 5];
+            float wobble_offset = data[d*7 + 6];
+            float cosr = (float)Math.cos(rotation);
+            float sinr = (float)Math.sin(rotation);
 
-            wobbleVboData[wobbleArrayIndex++] = wobbleArrayIndex;
-            wobbleVboData[wobbleArrayIndex++] = wobbleArrayIndex;
-            wobbleVboData[wobbleArrayIndex++] = wobbleArrayIndex;
-            wobbleVboData[wobbleArrayIndex++] = wobbleArrayIndex;
-        } else {
-            glBegin(GL_QUADS);
-            drawVertices(x1, y1, x2, y2, x3, y3, x4, y4);
-            glEnd();
+            int startIndex = quadArrayIndex / 2;
+            for(int i = 0; i < vertices.length; i += 2) {
+                quadVboData[quadArrayIndex++] = cenx + xscale * (vertices[i]*cosr - vertices[i+1]*sinr);
+                quadVboData[quadArrayIndex++] = ceny + yscale * (vertices[i]*sinr + vertices[i+1]*cosr);
+
+                wobbleVboData[wobbleArrayIndex++] = wobble;
+                wobbleVboData[wobbleArrayIndex++] = wobble_offset + ((float)i / vertices.length);
+            }
+
+            for(int i = 0; i < indices.length; i += 3) {
+                indexVboData[indexArrayIndex++] = indices[i+0] + startIndex;
+                indexVboData[indexArrayIndex++] = indices[i+1] + startIndex;
+                indexVboData[indexArrayIndex++] = indices[i+2] + startIndex;
+            }
         }
+    }
+
+    public static void drawQuad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4) {
+        drawTriangles(
+                new float[] {
+                        x1, y1, x2, y2, x3, y3, x4, y4
+                },
+                new int[] {
+                        0, 1, 2, 2, 1, 3
+                },
+                0, 0, 0, 1, 1, 0, 0
+        );
     }
 
     public static void drawQuad(float x1, float y1, float x2, float y2, float x3, float y3, float x4, float y4, float... data) {
-        for(int i = 0; i < data.length / 5; i++) {
-            float cenx = data[i*5];
-            float ceny = data[i*5 + 1];
-            float rotation = data[i*5 + 2];
-            float xscale = data[i*5 + 3];
-            float yscale = data[i*5 + 4];
-            float cosr = (float)Math.cos(rotation);
-            float sinr = (float)Math.sin(rotation);
-            drawQuad(
-                    cenx + xscale * (x1*cosr - y1*sinr),
-                    ceny + yscale * (x1*sinr + y1*cosr),
-                    cenx + xscale * (x2*cosr - y2*sinr),
-                    ceny + yscale * (x2*sinr + y2*cosr),
-                    cenx + xscale * (x3*cosr - y3*sinr),
-                    ceny + yscale * (x3*sinr + y3*cosr),
-                    cenx + xscale * (x4*cosr - y4*sinr),
-                    ceny + yscale * (x4*sinr + y4*cosr)
-            );
-        }
+        drawTriangles(
+                new float[] {
+                        x1, y1, x2, y2, x3, y3, x4, y4
+                },
+                new int[] {
+                        0, 1, 2, 2, 1, 3
+                },
+                data
+        );
     }
 
-    private static void drawVertices(float... positions) {
+    /*private static void drawVertices(float... positions) {
         for(int i = 0; i < positions.length; i += 2) {
             glVertex2d(positions[i], positions[i+1]);
         }
-    }
+    }*/
 
     public static void cleanUp() {
         layeredColorShader.cleanUp();

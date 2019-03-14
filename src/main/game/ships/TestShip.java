@@ -125,18 +125,30 @@ public class TestShip extends Ship {
         float screenShipBotCornerX = screenUnitX * 0.5f;
         float screenShipBotCornerY = screenUnitX * -0.9f;
 
-        float innerSpriteScale = 0.90f;
+        float innerSpriteScale = 0.95f;
+        float wobbleAmount = screenUnitX * 0.035f;
 
-        Graphics.drawQuad(
+        float[] vertices = {
                 0, 0 + screenShipTopY,
                 0 + screenShipCornerX, 0 + screenShipCornerY,
                 0 + screenShipBotCornerX, 0 + screenShipBotCornerY,
                 0, 0 + screenShipBotY,
+                0 - screenShipBotCornerX, 0 + screenShipBotCornerY,
+                0 - screenShipCornerX, 0 + screenShipCornerY,
+        };
+        int[] indices = {
+                0, 1, 2,
+                0, 2, 3,
+                0, 3, 4,
+                0, 4, 5
+        };
+        Graphics.drawTriangles(vertices, indices,
+                screenX, screenY,
+                -evadeRotation, 1.0f, spriteFlipY / viewRatio,
+                wobbleAmount, 0.3983f,
 
-                screenX, screenY, -evadeRotation, 1.0f, spriteFlipY / viewRatio,
-                screenX, screenY, evadeRotation, -1.0f, spriteFlipY / viewRatio,
-
-                screenX, screenY, -evadeRotation, 1.0f * innerSpriteScale, spriteFlipY * innerSpriteScale / viewRatio,
-                screenX, screenY, evadeRotation, -1.0f * innerSpriteScale, spriteFlipY * innerSpriteScale / viewRatio);
+                screenX, screenY,
+                -evadeRotation, 1.0f * innerSpriteScale, spriteFlipY * innerSpriteScale / viewRatio,
+                wobbleAmount, 0.5216f);
     }
 }
