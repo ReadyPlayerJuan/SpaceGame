@@ -2,6 +2,7 @@ package main.game.ships;
 
 import main.Util;
 import main.game.boards.Board;
+import main.game.boards.BoardCamera;
 import main.game.enums.ShipActionState;
 import main.game.enums.ShipActionType;
 import main.game.enums.Team;
@@ -12,25 +13,22 @@ import main.input.InputCode;
 import main.input.InputType;
 import main.views.GameView;
 import rendering.Graphics;
-import rendering.WindowManager;
-
-import static org.lwjgl.opengl.GL11.*;
 
 public class TestShip extends Ship {
     private final double evadeTimerMax = 0.5;
     private double evadeTimer = 0, evadePct = 0, prevEvadePct = 0;
     private int evadeDirection, evadeStartX, evadeEndX;
+    private final float evadeRotationMax = 0.2f;
+    private float evadeRotation = 0;
 
     private ShipAction actionEvadeLeft, actionEvadeRight;
     private ShipSection sectionLeft, sectionRight;
 
     public TestShip(GameView parentView, Team team) {
-        this.parentView = parentView;
-        this.team = team;
+        super(parentView, team);
 
-        colX = 0;
-        spriteColX = 0;
-        shipWidth = 2;
+        shipColWidth = 2;
+        collisionHeight = 0.5f;
 
         actionEvadeLeft = new ShipAction(ShipActionType.EVADE_LEFT,
                 new InputCode(InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
@@ -60,6 +58,7 @@ public class TestShip extends Ship {
             evadeTimer = Math.max(0, evadeTimer - delta);
             prevEvadePct = evadePct;
             evadePct = Util.skewPctPow(1 - (evadeTimer / evadeTimerMax), 2.0);
+            evadeRotation = (float)(1.0 - (2 * Math.abs((evadeTimer / evadeTimerMax) - 0.5))) * evadeDirection * evadeRotationMax;
 
             if(evadePct > 0.5 && prevEvadePct <= 0.5) {
                 colX += evadeDirection;
@@ -69,7 +68,7 @@ public class TestShip extends Ship {
 
         //set ship action states
         //for example: if in leftmost column, disable evade left
-        int boardWidth = currentBoard.numColumns;
+        int boardWidth = currentBoard.boardColumns;
         if(evadeTimer > 0) {
             actionEvadeLeft.setState(ShipActionState.ON_COOLDOWN);
         } else if(colX > 0) {
@@ -79,11 +78,15 @@ public class TestShip extends Ship {
         }
         if(evadeTimer > 0) {
             actionEvadeRight.setState(ShipActionState.ON_COOLDOWN);
-        } else if(colX + shipWidth < boardWidth) {
+        } else if(colX + shipColWidth < boardWidth) {
             actionEvadeRight.setState(ShipActionState.AVAILABLE);
         } else {
             actionEvadeRight.setState(ShipActionState.UNAVAILABLE);
         }
+
+
+        //update world position, etc
+        super.update(currentBoard, delta);
     }
 
     public void processAction(ShipAction action) {
@@ -105,28 +108,35 @@ public class TestShip extends Ship {
         }
     }
 
-    public void draw(Board currentBoard, int viewWidth, int viewHeight) {
-        //glBegin(GL_QUADS);
-        glColor4f(1, 0, 0, 1);
-        float shipX = viewWidth/2f + currentBoard.columnWidth * ((float)spriteColX + shipWidth/2.0f + currentBoard.numColumns/-2.0f);
-        float shipY = viewHeight/4f;
-        float shipW = currentBoard.columnWidth * shipWidth * 0.8f;
-        float shipH = shipW * 0.75f;
+    public void draw(Board currentBoard, BoardCamera camera, int viewWidth, int viewHeight) {
+        float viewRatio = (float)viewHeight / viewWidth;
+        float cameraZoomRatio = currentBoard.boardHeight / camera.visibleHeight;
+
+        float screenUnitX = cameraZoomRatio * currentBoard.boardColumnWidth * viewRatio * 2;
+        float screenUnitY = screenUnitX / viewRatio;
+
+        float screenX = (spriteWorldX - camera.centerX) * cameraZoomRatio * viewRatio * 2;
+        float screenY = (spriteWorldY - camera.centerY) * cameraZoomRatio * 2;
+
+        float screenShipTopY = screenUnitX * 0.8f;
+        float screenShipBotY = screenUnitX * -0.5f;
+        float screenShipCornerX = screenUnitX * 0.8f;
+        float screenShipCornerY = screenUnitX * -0.66f;
+        float screenShipBotCornerX = screenUnitX * 0.5f;
+        float screenShipBotCornerY = screenUnitX * -0.9f;
+
+        float innerSpriteScale = 0.90f;
+
         Graphics.drawQuad(
-                shipX - shipW/2, shipY - shipH/2,
-                shipX + shipW/2, shipY - shipH/2,
-                shipX + shipW/2, shipY + shipH/2,
-                shipX - shipW/2, shipY + shipH/2);
-        Graphics.drawQuad(
-                shipX - shipW/2+20, shipY - shipH/2+20,
-                shipX + shipW/2+20, shipY - shipH/2+20,
-                shipX + shipW/2+20, shipY + shipH/2+20,
-                shipX - shipW/2+20, shipY + shipH/2+20);
-        /*glVertex2d(shipX - shipW/2, shipY - shipH/2);
-        glVertex2d(shipX + shipW/2, shipY - shipH/2);
-        glVertex2d(shipX + shipW/2, shipY + shipH/2);
-        glVertex2d(shipX - shipW/2, shipY + shipH/2);
-        glEnd();*/
-        //WindowManager.debugFont.drawText("TEST", (int)shipX, (int)shipY);
+                0, 0 + screenShipTopY,
+                0 + screenShipCornerX, 0 + screenShipCornerY,
+                0 + screenShipBotCornerX, 0 + screenShipBotCornerY,
+                0, 0 + screenShipBotY,
+
+                screenX, screenY, -evadeRotation, 1.0f, spriteFlipY / viewRatio,
+                screenX, screenY, evadeRotation, -1.0f, spriteFlipY / viewRatio,
+
+                screenX, screenY, -evadeRotation, 1.0f * innerSpriteScale, spriteFlipY * innerSpriteScale / viewRatio,
+                screenX, screenY, evadeRotation, -1.0f * innerSpriteScale, spriteFlipY * innerSpriteScale / viewRatio);
     }
 }

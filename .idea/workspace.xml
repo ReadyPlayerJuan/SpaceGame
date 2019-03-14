@@ -2,28 +2,22 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="238bbc67-1f07-4c69-989a-8ef37b684bb9" name="Default" comment="">
-      <change afterPath="$PROJECT_DIR$/src/rendering/WindowManager.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rendering/colors/ColorRegion.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rendering/colors/ColorSet.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rendering/colors/ColorTheme.java" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/rendering/colors/ColorThemeManager.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/main/game/boards/BoardCamera.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rendering/shaders/color_vertex/ColorVertexShader.java" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexFragment.txt" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexVertex.txt" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/Main.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/Main.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/game/boards/Board.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/game/boards/Board.class" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/game/ships/Ship.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/game/ships/Ship.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/game/ships/TestShip.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/game/ships/TestShip.class" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/views/GameView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/views/GameView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/main/views/MainView.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/main/views/MainView.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/out/production/SpaceGame/rendering/Loader.class" beforeDir="false" afterPath="$PROJECT_DIR$/out/production/SpaceGame/rendering/Loader.class" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/Main.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/game/boards/Board.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/game/boards/Board.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main/game/ships/Ship.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/game/ships/Ship.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/game/ships/TestShip.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/game/ships/TestShip.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main/views/GameView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/views/GameView.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main/views/MainView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/main/views/MainView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rendering/Graphics.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/Graphics.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rendering/Loader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/Loader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rendering/shaders/ShaderProgram.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/shaders/ShaderProgram.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/rendering/WindowManager.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/WindowManager.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/rendering/shaders/layered_color/layeredColorFragment.txt" beforeDir="false" afterPath="$PROJECT_DIR$/src/rendering/shaders/layered_color/layeredColorFragment.txt" afterDir="false" />
     </list>
     <ignored path="$PROJECT_DIR$/out/" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -35,20 +29,11 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
-      <file leaf-file-name="ColorTheme.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorTheme.java">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="220">
-              <caret line="11" column="56" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="GameView.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/views/GameView.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="322">
-              <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="45" selection-end-column="8" />
+            <state relative-caret-position="219">
+              <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -56,16 +41,11 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Loader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/rendering/Loader.java">
+      <file leaf-file-name="BoardCamera.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/game/boards/BoardCamera.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-1">
-              <caret line="58" column="36" selection-start-line="58" selection-start-column="36" selection-end-line="58" selection-end-column="36" />
-              <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#1997#1998#0" expanded="true" />
-                <element signature="e#2038#2039#0" expanded="true" />
-              </folding>
+            <state relative-caret-position="240">
+              <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
             </state>
           </provider>
         </entry>
@@ -73,38 +53,44 @@
       <file leaf-file-name="Graphics.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/rendering/Graphics.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="559">
-              <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+            <state relative-caret-position="379">
+              <caret line="111" column="34" lean-forward="true" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#3952#3953#0" expanded="true" />
-                <element signature="e#3993#3994#0" expanded="true" />
-                <element signature="e#4043#4044#0" expanded="true" />
-                <element signature="e#4079#4080#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="LayeredColorShader.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java">
+      <file leaf-file-name="WindowManager.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/rendering/WindowManager.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state>
-              <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+            <state relative-caret-position="-395">
+              <caret line="73" column="31" selection-start-line="73" selection-start-column="31" selection-end-line="73" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
-                <element signature="e#566#567#0" expanded="true" />
-                <element signature="e#640#641#0" expanded="true" />
               </folding>
             </state>
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="Board.java" pinned="false" current-in-tab="true">
+      <file leaf-file-name="Board.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/game/boards/Board.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="199">
-              <caret line="40" column="31" lean-forward="true" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+            <state relative-caret-position="-1">
+              <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
+              <folding>
+                <element signature="imports" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="Ship.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/main/game/ships/Ship.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="519">
+              <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -115,8 +101,8 @@
       <file leaf-file-name="TestShip.java" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/main/game/ships/TestShip.java">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="279">
-              <caret line="114" column="26" lean-forward="true" selection-start-line="114" selection-start-column="26" selection-end-line="114" selection-end-column="26" />
+            <state relative-caret-position="139">
+              <caret line="118" column="78" selection-start-line="118" selection-start-column="78" selection-end-line="118" selection-end-column="78" />
               <folding>
                 <element signature="imports" expanded="true" />
               </folding>
@@ -124,18 +110,35 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="ShaderProgram.java" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/rendering/shaders/ShaderProgram.java">
+      <file leaf-file-name="colorVertexVertex.txt" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexVertex.txt">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="602">
-              <caret line="107" column="9" lean-forward="true" selection-start-line="107" selection-start-column="9" selection-end-line="107" selection-end-column="9" />
+            <state relative-caret-position="300">
+              <caret line="15" column="96" selection-start-line="15" selection-start-column="96" selection-end-line="15" selection-end-column="96" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="ColorVertexShader.java" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/ColorVertexShader.java">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="420">
+              <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
               <folding>
-                <element signature="imports" expanded="true" />
-                <element signature="e#2855#2856#0" expanded="true" />
-                <element signature="e#2905#2906#0" expanded="true" />
-                <element signature="e#3406#3407#0" expanded="true" />
-                <element signature="e#3441#3442#0" expanded="true" />
+                <element signature="e#726#727#0" expanded="true" />
+                <element signature="e#759#760#0" expanded="true" />
+                <element signature="e#649#650#0" expanded="true" />
+                <element signature="e#706#707#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="colorVertexFragment.txt" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexFragment.txt">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="140">
+              <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
             </state>
           </provider>
         </entry>
@@ -156,10 +159,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$PROJECT_DIR$/src/rendering/FontUtil.java" />
-        <option value="$PROJECT_DIR$/src/rendering/fonts/FontUtil.java" />
-        <option value="$PROJECT_DIR$/src/game/gameView/GameView.java" />
-        <option value="$PROJECT_DIR$/src/game/MainView.java" />
         <option value="$PROJECT_DIR$/src/views/MainView.java" />
         <option value="$PROJECT_DIR$/src/views/GameView.java" />
         <option value="$PROJECT_DIR$/src/game/views/View.java" />
@@ -185,14 +184,12 @@
         <option value="$PROJECT_DIR$/src/main/input/InputManager.java" />
         <option value="$PROJECT_DIR$/src/main/game/ships/ShipSection.java" />
         <option value="$PROJECT_DIR$/src/main/game/ships/ShipAction.java" />
-        <option value="$PROJECT_DIR$/src/main/game/ships/Ship.java" />
         <option value="$PROJECT_DIR$/src/main/input/InputCodeBuilder.java" />
         <option value="$PROJECT_DIR$/src/rendering/FrameBuffer.java" />
         <option value="$PROJECT_DIR$/src/main/views/View.java" />
         <option value="$PROJECT_DIR$/src/main/views/MainView.java" />
         <option value="$PROJECT_DIR$/src/rendering/shaders/layered_color/layeredColorVertex.txt" />
         <option value="$PROJECT_DIR$/src/rendering/colors/ColorRegions.java" />
-        <option value="$PROJECT_DIR$/src/rendering/WindowManager.java" />
         <option value="$PROJECT_DIR$/src/main/Main.java" />
         <option value="$PROJECT_DIR$/src/rendering/colors/ColorRegionType.java" />
         <option value="$PROJECT_DIR$/src/rendering/colors/ColorRegion.java" />
@@ -200,13 +197,19 @@
         <option value="$PROJECT_DIR$/src/rendering/colors/ColorTheme.java" />
         <option value="$PROJECT_DIR$/src/rendering/colors/ColorThemeManager.java" />
         <option value="$PROJECT_DIR$/src/rendering/shaders/ShaderProgram.java" />
-        <option value="$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java" />
         <option value="$PROJECT_DIR$/src/rendering/shaders/layered_color/layeredColorFragment.txt" />
         <option value="$PROJECT_DIR$/src/rendering/Loader.java" />
-        <option value="$PROJECT_DIR$/src/main/game/ships/TestShip.java" />
-        <option value="$PROJECT_DIR$/src/main/views/GameView.java" />
-        <option value="$PROJECT_DIR$/src/rendering/Graphics.java" />
+        <option value="$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java" />
+        <option value="$PROJECT_DIR$/src/main/game/ships/Ship.java" />
         <option value="$PROJECT_DIR$/src/main/game/boards/Board.java" />
+        <option value="$PROJECT_DIR$/src/main/views/GameView.java" />
+        <option value="$PROJECT_DIR$/src/main/game/boards/BoardCamera.java" />
+        <option value="$PROJECT_DIR$/src/main/game/ships/TestShip.java" />
+        <option value="$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexFragment.txt" />
+        <option value="$PROJECT_DIR$/src/rendering/shaders/color_vertex/ColorVertexShader.java" />
+        <option value="$PROJECT_DIR$/src/rendering/WindowManager.java" />
+        <option value="$PROJECT_DIR$/src/rendering/Graphics.java" />
+        <option value="$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexVertex.txt" />
       </list>
     </option>
   </component>
@@ -222,6 +225,8 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="PackagesPane" />
+      <pane id="AndroidView" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -282,13 +287,6 @@
               <item name="SpaceGame" type="b2602c69:ProjectViewProjectNode" />
               <item name="SpaceGame" type="462c0819:PsiDirectoryNode" />
               <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="main" type="462c0819:PsiDirectoryNode" />
-              <item name="views" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="SpaceGame" type="b2602c69:ProjectViewProjectNode" />
-              <item name="SpaceGame" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="rendering" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
@@ -311,6 +309,14 @@
               <item name="src" type="462c0819:PsiDirectoryNode" />
               <item name="rendering" type="462c0819:PsiDirectoryNode" />
               <item name="shaders" type="462c0819:PsiDirectoryNode" />
+              <item name="color_vertex" type="462c0819:PsiDirectoryNode" />
+            </path>
+            <path>
+              <item name="SpaceGame" type="b2602c69:ProjectViewProjectNode" />
+              <item name="SpaceGame" type="462c0819:PsiDirectoryNode" />
+              <item name="src" type="462c0819:PsiDirectoryNode" />
+              <item name="rendering" type="462c0819:PsiDirectoryNode" />
+              <item name="shaders" type="462c0819:PsiDirectoryNode" />
               <item name="layered_color" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
@@ -318,8 +324,6 @@
         </subPane>
       </pane>
       <pane id="Scope" />
-      <pane id="AndroidView" />
-      <pane id="PackagesPane" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -330,12 +334,13 @@
     <property name="settings.editor.selected.configurable" value="preferences.keymap" />
   </component>
   <component name="RecentsManager">
-    <key name="CopyFile.RECENT_KEYS">
-      <recent name="C:\Users\nicks\Desktop\Java C++\workspace\Java\SpaceGame\libs" />
-    </key>
     <key name="MoveFile.RECENT_KEYS">
       <recent name="C:\Users\nicks\Desktop\Java C++\workspace\Java\SpaceGame\libs" />
       <recent name="C:\Users\nicks\Desktop\Java C++\workspace\Java\SpaceGame" />
+    </key>
+    <key name="CopyFile.RECENT_KEYS">
+      <recent name="C:\Users\nicks\Desktop\Java C++\workspace\Java\SpaceGame\src\rendering\shaders\color_vertex" />
+      <recent name="C:\Users\nicks\Desktop\Java C++\workspace\Java\SpaceGame\libs" />
     </key>
   </component>
   <component name="RunDashboard">
@@ -452,7 +457,6 @@
       <window_info id="Capture Tool" order="2" />
       <window_info id="Designer" order="2" />
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1921875" />
-      <window_info anchor="bottom" id="Find" order="1" weight="0.32943678" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
       <window_info id="UI Designer" order="2" />
@@ -464,6 +468,7 @@
       <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
+      <window_info anchor="bottom" id="Find" order="1" weight="0.32943678" />
     </layout>
   </component>
   <component name="VcsContentAnnotationSettings">
@@ -475,29 +480,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/main/views/MainView.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="660">
-          <caret line="33" lean-forward="true" selection-start-line="33" selection-end-line="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/RawModel.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="300">
-          <caret line="19" lean-forward="true" selection-start-line="19" selection-end-line="19" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/SpaceGame.iml">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
-    <entry file="file://$PROJECT_DIR$/.gitattributes">
-      <provider selected="true" editor-type-id="text-editor" />
-    </entry>
     <entry file="file://$PROJECT_DIR$/res/test.txt" />
     <entry file="file://$PROJECT_DIR$/src/rendering/fonts/FontUtil.java">
       <provider selected="true" editor-type-id="text-editor">
@@ -541,9 +523,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="160">
           <caret line="10" column="31" selection-start-line="10" selection-start-column="31" selection-end-line="10" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -558,9 +537,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="280">
           <caret line="14" column="7" selection-start-line="14" selection-start-column="7" selection-end-line="14" selection-end-column="7" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -578,37 +554,14 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/ITexture.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="95">
-          <caret line="31" column="3" selection-start-line="31" selection-start-column="3" selection-end-line="31" selection-end-column="3" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/Texture.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="261">
-          <caret line="195" column="22" lean-forward="true" selection-start-line="195" selection-start-column="22" selection-end-line="196" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/ITexture.java" />
+    <entry file="file://$PROJECT_DIR$/src/rendering/Texture.java" />
     <entry file="file://$PROJECT_DIR$/src/rendering/FrameBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
           <caret line="13" lean-forward="true" selection-start-line="13" selection-end-line="13" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#1755#1756#0" expanded="true" />
-            <element signature="e#1783#1784#0" expanded="true" />
-            <element signature="e#1812#1813#0" expanded="true" />
-            <element signature="e#1840#1841#0" expanded="true" />
-            <element signature="e#1870#1871#0" expanded="true" />
-            <element signature="e#1899#1900#0" expanded="true" />
-            <element signature="e#1930#1931#0" expanded="true" />
-            <element signature="e#1962#1963#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -617,20 +570,10 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="260">
           <caret line="13" column="5" lean-forward="true" selection-start-line="13" selection-start-column="5" selection-end-line="13" selection-end-column="5" />
-          <folding>
-            <element signature="e#330#331#0" expanded="true" />
-            <element signature="e#376#377#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/game/Input.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="18" selection-start-line="2" selection-start-column="18" selection-end-line="2" selection-end-column="18" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/game/Input.java" />
     <entry file="file://$PROJECT_DIR$/.gitignore">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="100">
@@ -638,13 +581,7 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/input/InputCodeBuiler.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="28" selection-start-line="2" selection-start-column="28" selection-end-line="2" selection-end-column="28" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/input/InputCodeBuiler.java" />
     <entry file="file://$PROJECT_DIR$/src/main/input/InputType.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="540">
@@ -663,9 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="15" column="68" selection-start-line="15" selection-start-column="68" selection-end-line="15" selection-end-column="68" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -673,15 +607,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="300">
           <caret line="50" column="47" lean-forward="true" selection-start-line="50" selection-start-column="47" selection-end-line="51" selection-end-column="31" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1584#1585#0" expanded="true" />
-            <element signature="e#1624#1625#0" expanded="true" />
-            <element signature="e#1689#1690#0" expanded="true" />
-            <element signature="e#1730#1731#0" expanded="true" />
-            <element signature="e#1926#1927#0" expanded="true" />
-            <element signature="e#1960#1961#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -696,15 +621,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="360">
           <caret line="32" column="35" selection-start-line="32" selection-start-column="35" selection-end-line="32" selection-end-column="35" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#879#880#0" expanded="true" />
-            <element signature="e#906#907#0" expanded="true" />
-            <element signature="e#949#950#0" expanded="true" />
-            <element signature="e#981#982#0" expanded="true" />
-            <element signature="e#1025#1026#0" expanded="true" />
-            <element signature="e#1054#1055#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -725,36 +641,14 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="140">
           <caret line="7" column="56" selection-start-line="7" selection-start-column="56" selection-end-line="7" selection-end-column="56" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShaders.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="40">
-          <caret line="2" column="32" selection-start-line="2" selection-start-column="32" selection-end-line="2" selection-end-column="32" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/game/ships/Ship.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="119">
-          <caret line="39" column="33" lean-forward="true" selection-start-line="39" selection-start-column="33" selection-end-line="39" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShaders.java" />
     <entry file="file://$PROJECT_DIR$/src/rendering/fonts/TrueTypeFont.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="515">
           <caret line="50" column="33" selection-start-line="50" selection-start-column="33" selection-end-line="50" selection-end-column="33" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -768,33 +662,12 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/WindowManager.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="385">
-          <caret line="143" column="10" selection-start-line="143" selection-start-column="10" selection-end-line="143" selection-end-column="10" />
-          <folding>
-            <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rendering/FrameBuffer.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="459">
           <caret line="121" column="40" lean-forward="true" selection-start-line="121" selection-start-column="40" selection-end-line="123" selection-end-column="25" />
           <folding>
             <element signature="imports" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/Main.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-580">
-          <caret line="10" column="42" selection-start-line="10" selection-start-column="42" selection-end-line="10" selection-end-column="42" />
-          <folding>
-            <element signature="e#2491#2492#0" expanded="true" />
-            <element signature="e#2523#2524#0" expanded="true" />
           </folding>
         </state>
       </provider>
@@ -826,13 +699,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorTheme.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="220">
-          <caret line="11" column="56" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/rendering/shaders/ShaderProgram.java">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="602">
@@ -854,62 +720,119 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorSet.java">
+    <entry file="file://$PROJECT_DIR$/src/rendering/Loader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="320">
-          <caret line="16" column="61" lean-forward="true" selection-start-line="16" selection-start-column="61" selection-end-line="16" selection-end-column="61" />
-          <folding>
-            <element signature="e#1403#1404#0" expanded="true" />
-            <element signature="e#1445#1446#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="359">
+          <caret line="58" column="36" selection-start-line="58" selection-start-column="36" selection-end-line="58" selection-end-column="36" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorTheme.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="220">
+          <caret line="11" column="56" selection-start-line="11" selection-start-column="56" selection-end-line="11" selection-end-column="56" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorRegion.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1">
-          <caret line="1" lean-forward="true" selection-start-line="1" selection-end-line="1" />
+        <state relative-caret-position="40">
+          <caret line="2" column="12" selection-start-line="2" selection-start-column="12" selection-end-line="2" selection-end-column="12" />
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/game/ships/TestShip.java">
+    <entry file="file://$PROJECT_DIR$/src/main/Main.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="279">
-          <caret line="114" column="26" lean-forward="true" selection-start-line="114" selection-start-column="26" selection-end-line="114" selection-end-column="26" />
+        <state relative-caret-position="-220">
+          <caret line="16" column="13" selection-start-line="16" selection-start-column="13" selection-end-line="16" selection-end-column="13" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/colors/ColorSet.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="320">
+          <caret line="16" column="61" lean-forward="true" selection-start-line="16" selection-start-column="61" selection-end-line="16" selection-end-column="61" />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/rendering/shaders/layered_color/LayeredColorShader.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state>
-          <caret line="4" lean-forward="true" selection-start-line="4" selection-end-line="4" />
+        <state relative-caret-position="40">
+          <caret line="6" column="107" lean-forward="true" selection-start-line="6" selection-start-column="107" selection-end-line="6" selection-end-column="107" />
           <folding>
             <element signature="imports" expanded="true" />
             <element signature="e#566#567#0" expanded="true" />
             <element signature="e#640#641#0" expanded="true" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/rendering/Loader.java">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-1">
-          <caret line="58" column="36" selection-start-line="58" selection-start-column="36" selection-end-line="58" selection-end-column="36" />
-          <folding>
-            <element signature="imports" expanded="true" />
-            <element signature="e#1997#1998#0" expanded="true" />
-            <element signature="e#2038#2039#0" expanded="true" />
+            <element signature="e#1198#1199#0" expanded="true" />
+            <element signature="e#1248#1249#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/main/views/GameView.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="322">
-          <caret line="45" column="8" selection-start-line="45" selection-start-column="8" selection-end-line="45" selection-end-column="8" />
+        <state relative-caret-position="219">
+          <caret line="52" column="8" selection-start-line="52" selection-start-column="8" selection-end-line="52" selection-end-column="8" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/game/boards/BoardCamera.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="12" column="47" selection-start-line="12" selection-start-column="47" selection-end-line="12" selection-end-column="47" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexFragment.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="140">
+          <caret line="7" column="33" selection-start-line="7" selection-start-column="33" selection-end-line="7" selection-end-column="33" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/game/ships/Ship.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="519">
+          <caret line="59" column="31" selection-start-line="59" selection-start-column="31" selection-end-line="59" selection-end-column="31" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/main/game/boards/Board.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-1">
+          <caret line="36" lean-forward="true" selection-start-line="36" selection-end-line="36" />
+          <folding>
+            <element signature="imports" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/ColorVertexShader.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="420">
+          <caret line="23" column="5" lean-forward="true" selection-start-line="23" selection-start-column="5" selection-end-line="23" selection-end-column="5" />
+          <folding>
+            <element signature="e#726#727#0" expanded="true" />
+            <element signature="e#759#760#0" expanded="true" />
+            <element signature="e#649#650#0" expanded="true" />
+            <element signature="e#706#707#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/WindowManager.java">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-395">
+          <caret line="73" column="31" selection-start-line="73" selection-start-column="31" selection-end-line="73" selection-end-column="31" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
@@ -918,25 +841,28 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/rendering/Graphics.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="559">
-          <caret line="75" column="8" selection-start-line="75" selection-start-column="8" selection-end-line="75" selection-end-column="8" />
+        <state relative-caret-position="379">
+          <caret line="111" column="34" lean-forward="true" selection-start-line="111" selection-start-column="34" selection-end-line="111" selection-end-column="34" />
           <folding>
             <element signature="imports" expanded="true" />
-            <element signature="e#3952#3953#0" expanded="true" />
-            <element signature="e#3993#3994#0" expanded="true" />
-            <element signature="e#4043#4044#0" expanded="true" />
-            <element signature="e#4079#4080#0" expanded="true" />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/src/main/game/boards/Board.java">
+    <entry file="file://$PROJECT_DIR$/src/main/game/ships/TestShip.java">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="199">
-          <caret line="40" column="31" lean-forward="true" selection-start-line="40" selection-start-column="31" selection-end-line="40" selection-end-column="31" />
+        <state relative-caret-position="139">
+          <caret line="118" column="78" selection-start-line="118" selection-start-column="78" selection-end-line="118" selection-end-column="78" />
           <folding>
             <element signature="imports" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/rendering/shaders/color_vertex/colorVertexVertex.txt">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="300">
+          <caret line="15" column="96" selection-start-line="15" selection-start-column="96" selection-end-line="15" selection-end-column="96" />
         </state>
       </provider>
     </entry>

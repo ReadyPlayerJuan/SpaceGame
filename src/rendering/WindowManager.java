@@ -71,7 +71,7 @@ public class WindowManager {
 
 
 
-        lastFrameTime = getCurrentTime();
+        lastFrameTime = getTime();
         updateFps();
     }
 
@@ -152,7 +152,7 @@ public class WindowManager {
         return fps;
     }
 
-    private static double getCurrentTime() {
+    public static double getTime() {
         return lastFrameTime;
     }
 }
