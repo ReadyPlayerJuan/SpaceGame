@@ -32,6 +32,7 @@ public class ShipSection {
         this.weapons = weapons;
 
         for(Weapon w: weapons) {
+            w.setShipSection(this);
             for(ShipAction wa: w.getWeaponActions()) {
                 actions.add(wa);
             }

@@ -201,11 +201,21 @@ public class Graphics {
         );
     }
 
-    /*private static void drawVertices(float... positions) {
-        for(int i = 0; i < positions.length; i += 2) {
-            glVertex2d(positions[i], positions[i+1]);
+    public static void drawQuads(float[] quadVertices, float... data) {
+        for(int i = 0; i < quadVertices.length / 8; i++) {
+            drawQuad(
+                    quadVertices[i*8],
+                    quadVertices[i*8 + 1],
+                    quadVertices[i*8 + 2],
+                    quadVertices[i*8 + 3],
+                    quadVertices[i*8 + 4],
+                    quadVertices[i*8 + 5],
+                    quadVertices[i*8 + 6],
+                    quadVertices[i*8 + 7],
+                    data
+            );
         }
-    }*/
+    }
 
     public static void cleanUp() {
         layeredColorShader.cleanUp();

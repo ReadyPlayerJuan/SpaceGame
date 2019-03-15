@@ -11,7 +11,7 @@ public abstract class Weapon {
         this.shipSection = null;
     }
 
-    public Weapon(ShipSection shipSection) {
+    public void setShipSection(ShipSection shipSection) {
         this.shipSection = shipSection;
     }
 

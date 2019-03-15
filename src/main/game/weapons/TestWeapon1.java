@@ -10,10 +10,10 @@ public class TestWeapon1 extends Weapon {
     private double cooldown = 0;
     private ShipAction actionFireWeapon;
 
-    public TestWeapon1(ShipSection shipSection, ShipActionType fireAction) {
-        super(shipSection);
+    public TestWeapon1(ShipActionType fireAction, InputCode code) {
+        super();
 
-        actionFireWeapon = new ShipAction(fireAction, new InputCode());
+        actionFireWeapon = new ShipAction(fireAction, code);
 
         this.weaponActions = new ShipAction[] {
                 actionFireWeapon,

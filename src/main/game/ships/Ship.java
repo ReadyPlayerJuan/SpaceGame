@@ -13,8 +13,8 @@ import java.util.ArrayList;
 public abstract class Ship {
     protected GameView parentView;
 
-    protected int colX, shipColWidth;
-    protected double spriteColX;
+    protected int shipX, shipWidth;
+    protected double spriteX;
 
     protected float spriteFlipY;
     protected float spriteWorldX, spriteWorldY, collisionHeight;
@@ -30,8 +30,8 @@ public abstract class Ship {
         this.parentView = parentView;
         this.team = team;
 
-        colX = 0;
-        spriteColX = 0;
+        shipX = 0;
+        spriteX = 0;
 
         if(team == Team.PLAYER) {
             spriteFlipY = 1;
@@ -41,7 +41,7 @@ public abstract class Ship {
     }
 
     public void update(Board currentBoard, double delta) {
-        spriteWorldX = (float)(currentBoard.boardColumnWidth * (spriteColX + shipColWidth/2.0f + currentBoard.boardColumns/-2.0f));
+        spriteWorldX = (float)(currentBoard.boardColumnWidth * (spriteX + shipWidth/2.0f + currentBoard.boardColumns/-2.0f));
         if(team == Team.PLAYER) {
             spriteWorldY = currentBoard.boardHeight / -2.0f;
         } else {
@@ -56,8 +56,8 @@ public abstract class Ship {
     }
 
     public void setPosition(int colX) {
-        this.colX = colX;
-        this.spriteColX = colX;
+        this.shipX = colX;
+        this.spriteX = colX;
     }
 
     public abstract void draw(Board currentBoard, BoardCamera camera, int viewWidth, int viewHeight);
