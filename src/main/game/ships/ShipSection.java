@@ -1,35 +1,55 @@
 package main.game.ships;
 
+import main.game.boards.Board;
+import main.game.collision.Hitbox;
+import main.game.collision.HitboxController;
+import main.game.collision.projectiles.Projectile;
 import main.game.enums.Direction;
 import main.game.weapons.Weapon;
 
 import java.util.ArrayList;
 
-public class ShipSection {
-    private Ship ship;
+public abstract class ShipSection implements HitboxController {
+    protected Board board;
+    protected Ship ship;
+    protected Hitbox hitbox;
 
-    private int columnOffset;
-    private int health, maxHealth;
-    public boolean isFocused = false;
+    protected double worldX, worldY;
+    protected int health, maxHealth;
+    protected boolean isFocused = false;
 
-    private ShipSection[] adjacentSections = {null, null, null, null};
-    private Weapon[] weapons;
+    protected Weapon[] weapons;
 
-    private ArrayList<ShipAction> actions = new ArrayList<ShipAction>();
+    protected ShipAction[] baseActions;
+    protected ArrayList<ShipAction> actions = new ArrayList<ShipAction>();
 
-    public ShipSection(Ship ship, int columnOffset, int maxHealth, ShipAction... baseActions) {
+    public ShipSection(Ship ship, Board board, Hitbox hitbox, int maxHealth, ShipAction... baseActions) {
         this.ship = ship;
-        this.columnOffset = columnOffset;
+        this.board = board;
+        this.hitbox = hitbox;
         this.maxHealth = maxHealth;
         this.health = maxHealth;
+        this.baseActions = baseActions;
 
-        for(ShipAction a: baseActions) {
-            actions.add(a);
-        }
+        hitbox.setOwner(this);
+
+        setWeapons(new Weapon[] {});
+    }
+
+    public void setPosition(double worldX, double worldY) {
+        this.worldX = worldX;
+        this.worldY = worldY;
+        hitbox.setPosition(worldX, worldY);
     }
 
     public void setWeapons(Weapon[] weapons) {
         this.weapons = weapons;
+
+        actions.clear();
+
+        for(ShipAction a: baseActions) {
+            actions.add(a);
+        }
 
         for(Weapon w: weapons) {
             w.setShipSection(this);
@@ -38,6 +58,8 @@ public class ShipSection {
             }
         }
     }
+
+    public abstract void collide(Projectile p);
 
     public void update(double delta) {
         for(Weapon w: weapons) {
@@ -49,23 +71,23 @@ public class ShipSection {
         }
     }
 
-    public boolean hasAdjacentSection(Direction dir) {
-        return adjacentSections[dir.i] != null;
+    public void setFocused(boolean focused) {
+        this.isFocused = focused;
     }
 
-    public ShipSection getAdjacentShipSection(Direction dir) {
-        return adjacentSections[dir.i];
-    }
-
-    public void setAdjacentSection(Direction dir, ShipSection section) {
-        adjacentSections[dir.i] = section;
+    public boolean isFocused() {
+        return isFocused;
     }
 
     public boolean systemsBroken() {
-        return health > 1;
+        return health < 1;
     }
 
     public ArrayList<ShipAction> getActions() {
         return actions;
+    }
+
+    public Hitbox getHitbox() {
+        return hitbox;
     }
 }

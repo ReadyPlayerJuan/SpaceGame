@@ -1,80 +1,109 @@
-package main.game.ships;
+package main.game.ships.test_ship;
 
-import main.Util;
 import main.game.boards.Board;
 import main.game.boards.BoardCamera;
+import main.game.collision.Hitbox;
+import main.game.collision.projectiles.Projectile;
 import main.game.enums.ShipActionType;
 import main.game.enums.Team;
-import main.game.enums.Direction;
+import main.game.ships.Ship;
+import main.game.ships.ShipAction;
+import main.game.ships.ShipSection;
 import main.game.ships.systems.ShipEvasion;
 import main.game.weapons.TestWeapon1;
 import main.game.weapons.Weapon;
 import main.input.InputCode;
 import main.input.InputType;
-import main.views.GameView;
 import rendering.Graphics;
 
 public class TestShip extends Ship {
-    private final double evadeTimerMax = 0.5;
-    private final float evadeRotationMax = 0.2f;
+    private final int SHIP_WIDTH = 2;
+    private final double EVADE_SPEED = 0.5;
+    private final float EVADE_ROTATION = 0.2f;
+    private final float COLLISION_HEIGHT = 0.5f;
 
     private ShipEvasion evasionSystem;
+    private double approxColX = 0;
 
+    private TestWeapon1 weaponLeft, weaponRight;
     private ShipAction actionEvadeLeft, actionEvadeRight;
     private ShipSection sectionLeft, sectionRight;
 
-    public TestShip(GameView parentView, Team team) {
-        super(parentView, team);
-
-        shipWidth = 2;
-        collisionHeight = 0.5f;
+    public TestShip(Board board, Team team) {
+        super(board, team);
 
         actionEvadeLeft = new ShipAction(ShipActionType.EVADE_LEFT,
                 new InputCode(InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
         actionEvadeRight = new ShipAction(ShipActionType.EVADE_RIGHT,
                 new InputCode(InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
 
-        evasionSystem = new ShipEvasion(evadeTimerMax, evadeRotationMax, actionEvadeLeft, actionEvadeRight);
+        evasionSystem = new ShipEvasion(EVADE_SPEED, EVADE_ROTATION, actionEvadeLeft, actionEvadeRight);
 
-        Weapon weaponLeft = new TestWeapon1(ShipActionType.FIRE_WEAPON_1,
+        weaponLeft = new TestWeapon1(ShipActionType.FIRE_WEAPON_1,
                 new InputCode(InputType.INPUT_LONG, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
-        Weapon weaponRight = new TestWeapon1(ShipActionType.FIRE_WEAPON_2,
+        weaponRight = new TestWeapon1(ShipActionType.FIRE_WEAPON_2,
                 new InputCode(InputType.INPUT_LONG, InputType.PAUSE_SHORT, InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
 
-        sectionLeft = new ShipSection(this, 0, 2, actionEvadeLeft);
-        sectionRight = new ShipSection(this, 1, 2, actionEvadeRight);
+        sectionLeft = new ShipSection(this, board,
+                new Hitbox(null, team, 0, 0, 1, 1),
+                2, actionEvadeLeft) {
+
+            @Override
+            public void collide(Projectile p) {
+                System.out.println("COLLISION LEFT!!!!");
+            }
+        };
+        sectionRight = new ShipSection(this, board,
+                new Hitbox(null, team, 0, 0, 1, 1),
+                2, actionEvadeRight) {
+
+            @Override
+            public void collide(Projectile p) {
+                System.out.println("COLLISION RIGHT!!!!");
+            }
+        };
         sectionLeft.setWeapons(new Weapon[] {
                 weaponLeft,
         });
         sectionRight.setWeapons(new Weapon[] {
                 weaponRight,
         });
-        sectionLeft.setAdjacentSection(Direction.RIGHT, sectionRight);
-        sectionRight.setAdjacentSection(Direction.LEFT, sectionLeft);
-        this.sections = new ShipSection[] {sectionLeft, sectionRight};
+        //sectionLeft.setAdjacentSection(Direction.RIGHT, sectionRight);
+        //sectionRight.setAdjacentSection(Direction.LEFT, sectionLeft);
+        sections = new ShipSection[] {sectionLeft, sectionRight};
 
         focusedSection = 0;
+        sectionLeft.setFocused(true);
+        sectionRight.setFocused(true);
 
         initDraw();
     }
 
-    public void update(Board currentBoard, double delta) {
+    @Override
+    public void update(double delta) {
+        approxColX = Math.round((position.getWorldX() / board.getColumnWidth()) * 2.0) / 2.0;
+        System.out.println(position + "   " + approxColX);
+
+        //update evasion and let evasion system control position if evading
+        evasionSystem.update(delta, board.getNumColumns(), approxColX, shipWidth);
+        if(evasionSystem.isEvading())
+            position.setX(evasionSystem.getEvasionPosition());
+
+        //when done evading, slot into the board columns
+        if(evasionSystem.isFinishedEvading())
+            position.setX(Math.round((position.getWorldX() / board.getColumnWidth()) * 2.0) / 2.0);
+
+        //update sections, hitboxes, etc
         updateShipSections(delta);
-
-        evasionSystem.update(delta, currentBoard.boardColumns, shipX, shipWidth);
-        shipX += evasionSystem.shipShouldMove();
-        spriteX = shipX + evasionSystem.getShipSpriteOffset();
-
-        //update world position, etc
-        super.update(currentBoard, delta);
     }
 
     public void processAction(ShipAction action) {
-        if(evasionSystem.processInput(action)) return;
+        if(evasionSystem.processInput(action, approxColX)) return;
 
         switch(action.getAction()) {
             case FIRE_WEAPON_1:
                 System.out.println("fire 1");
+                //weaponLeft.fire();
                 break;
             case FIRE_WEAPON_2:
                 System.out.println("fire 2");
@@ -167,17 +196,15 @@ public class TestShip extends Ship {
         };
     }
 
-    public void draw(Board currentBoard, BoardCamera camera, int viewWidth, int viewHeight) {
-        float viewRatio = (float)viewHeight / viewWidth;
-        float cameraZoomRatio = currentBoard.boardHeight / camera.visibleHeight;
-
-        float screenUnitX = cameraZoomRatio * currentBoard.boardColumnWidth * viewRatio * 2;
-        //float screenUnitY = screenUnitX / viewRatio;
+    public void draw(BoardCamera camera) {
+        float viewRatio = camera.getViewRatio();
+        float screenUnitX = camera.getScreenColumnWidth();
 
         float rotation = evasionSystem.getEvadeRotation();
 
-        float screenX = (spriteWorldX - camera.centerX) * cameraZoomRatio * viewRatio * 2;
-        float screenY = (spriteWorldY - camera.centerY) * cameraZoomRatio * 2;
+        position.refresh(camera);
+        float screenX = position.getScreenX();
+        float screenY = position.getScreenY();
 
         Graphics.drawTriangles(shipVertices, shipIndices,
                 screenX, screenY,
@@ -186,8 +213,8 @@ public class TestShip extends Ship {
 
                 screenX, screenY,
                 -rotation, 1.0f * screenUnitX * shipInnerSpriteScale, spriteFlipY * screenUnitX * shipInnerSpriteScale / viewRatio,
-                screenUnitX * shipWobbleAmount, 0.5216f);
-
+                screenUnitX * shipWobbleAmount, 0.5216f
+        );
 
         Graphics.drawTriangles(windowVertices, windowIndices,
                 screenX, screenY,
@@ -196,8 +223,8 @@ public class TestShip extends Ship {
 
                 screenX, screenY,
                 -rotation, 1.0f * 0.90f * screenUnitX, spriteFlipY * 0.90f * screenUnitX / viewRatio,
-                windowWobbleAmount * screenUnitX, 0.4139f);
-
+                windowWobbleAmount * screenUnitX, 0.4139f
+        );
 
         Graphics.drawQuads(squareVertices,
                 screenX, screenY,

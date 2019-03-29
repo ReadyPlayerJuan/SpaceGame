@@ -2,52 +2,44 @@ package main.game.ships;
 
 import main.game.boards.Board;
 import main.game.boards.BoardCamera;
+import main.game.boards.BoardVector;
 import main.game.enums.ShipActionState;
 import main.game.enums.Team;
 import main.input.InputCode;
 import main.views.GameView;
-import main.views.View;
 
 import java.util.ArrayList;
 
 public abstract class Ship {
-    protected GameView parentView;
+    //protected GameView parentView;
+    protected Board board;
 
-    protected int shipX, shipWidth;
-    protected double spriteX;
-
+    protected int shipWidth;
+    protected BoardVector position;
     protected float spriteFlipY;
-    protected float spriteWorldX, spriteWorldY, collisionHeight;
     protected Team team;
-
     protected ShipSection[] sections;
     protected int focusedSection;
 
     protected ArrayList<ShipAction> globalActions = new ArrayList<>();
     protected ArrayList<ShipAction> availableActions = new ArrayList<>();
 
-    public Ship(GameView parentView, Team team) {
-        this.parentView = parentView;
+    public Ship(Board board, Team team) {
+        this.board = board;
         this.team = team;
 
-        shipX = 0;
-        spriteX = 0;
+        position = new BoardVector(0, 0);
 
         if(team == Team.PLAYER) {
             spriteFlipY = 1;
+            position.setY(board.getPlayableHeight() / -2);
         } else {
             spriteFlipY = -1;
+            position.setY(board.getPlayableHeight() / 2);
         }
     }
 
-    public void update(Board currentBoard, double delta) {
-        spriteWorldX = (float)(currentBoard.boardColumnWidth * (spriteX + shipWidth/2.0f + currentBoard.boardColumns/-2.0f));
-        if(team == Team.PLAYER) {
-            spriteWorldY = currentBoard.boardHeight / -2.0f;
-        } else {
-            spriteWorldY = currentBoard.boardHeight / 2.0f;
-        }
-    }
+    public abstract void update(double delta);
 
     protected void updateShipSections(double delta) {
         for(ShipSection s: sections) {
@@ -56,11 +48,11 @@ public abstract class Ship {
     }
 
     public void setPosition(int colX) {
-        this.shipX = colX;
-        this.spriteX = colX;
+        //this.shipColX = colX;
+        //this.shipWorldX = colX;
     }
 
-    public abstract void draw(Board currentBoard, BoardCamera camera, int viewWidth, int viewHeight);
+    public abstract void draw(BoardCamera camera);
 
     public void processInput(InputCode code) {
         updateAvailableActions();
@@ -85,6 +77,10 @@ public abstract class Ship {
                     availableActions.add(a);
             }
         }
+    }
+
+    public ShipSection[] getSections() {
+        return sections;
     }
 
     public abstract void processAction(ShipAction action);

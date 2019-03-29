@@ -3,7 +3,6 @@ package main.game.weapons;
 import main.game.enums.ShipActionType;
 import main.game.enums.ShipActionState;
 import main.game.ships.ShipAction;
-import main.game.ships.ShipSection;
 import main.input.InputCode;
 
 public class TestWeapon1 extends Weapon {
@@ -31,6 +30,6 @@ public class TestWeapon1 extends Weapon {
             actionFireWeapon.setState(ShipActionState.AVAILABLE);
         }
 
-        actionFireWeapon.setFocused(shipSection.isFocused);
+        //actionFireWeapon.setFocused(shipSection.isFocused);
     }
 }

@@ -4,17 +4,15 @@ import main.game.boards.Board;
 import main.game.boards.BoardCamera;
 import main.game.enums.Team;
 import main.game.ships.Ship;
-import main.game.ships.TestShip;
+import main.game.ships.test_ship.TestShip;
 import main.input.InputCode;
 import rendering.FrameBuffer;
 import rendering.Graphics;
 import rendering.colors.ColorRegion;
 import rendering.colors.ColorTheme;
 
-import static  org.lwjgl.opengl.GL11.*;
-
 public class GameView extends View {
-    private Board currentBoard;
+    private Board board;
     private BoardCamera camera;
     private Ship playerShip, enemyShip; //maybe make this a blueprint, and then create a new player ship for each board
 
@@ -25,17 +23,21 @@ public class GameView extends View {
 
         layerFrameBuffer = new FrameBuffer(width, height);
 
-        currentBoard = new Board(this, 6);
-        camera = new BoardCamera(currentBoard);
-        playerShip = new TestShip(this, Team.PLAYER);
-        playerShip.setPosition(currentBoard.boardColumns/2 - 1);
-        enemyShip = new TestShip(this, Team.ENEMY);
+        board = new Board(this, 6, 6.0f);
+        camera = new BoardCamera(board, width, height);
+
+        playerShip = new TestShip(board, Team.PLAYER);
+        //playerShip.setPosition(board.getBoardWidth()/2 - 1);
+        board.addShip(playerShip);
+
+        enemyShip = new TestShip(board, Team.ENEMY);
+        board.addShip(enemyShip);
     }
 
     public void updateSelf(double delta) {
-        currentBoard.update(delta);
-        playerShip.update(currentBoard, delta);
-        enemyShip.update(currentBoard, delta);
+        playerShip.update(delta);
+        enemyShip.update(delta);
+        board.update(delta);
     }
 
     public void processInput(InputCode code) {
@@ -48,11 +50,11 @@ public class GameView extends View {
         Graphics.clear(0, 0, 0, 1);
 
         Graphics.startDrawingColorRegion(ColorRegion.GAME_BACKGROUND);
-        currentBoard.draw(camera);
+        board.draw(camera);
         Graphics.startDrawingColorRegion(ColorRegion.GAME_PLAYER_SHIP);
-        playerShip.draw(currentBoard, camera, width, height);
+        playerShip.draw(camera);
         Graphics.startDrawingColorRegion(ColorRegion.GAME_ENEMY_SHIP);
-        enemyShip.draw(currentBoard, camera, width, height);
+        enemyShip.draw(camera);
         Graphics.finishDrawingColorRegion();
 
         layerFrameBuffer.unbindFrameBuffer();
