@@ -4,6 +4,7 @@ import main.game.boards.Board;
 import main.game.boards.BoardCamera;
 import main.game.collision.Hitbox;
 import main.game.collision.projectiles.Projectile;
+import main.game.collision.projectiles.TestProjectile1;
 import main.game.enums.ShipActionType;
 import main.game.enums.Team;
 import main.game.ships.Ship;
@@ -39,13 +40,13 @@ public class TestShip extends Ship {
 
         evasionSystem = new ShipEvasion(EVADE_SPEED, EVADE_ROTATION, actionEvadeLeft, actionEvadeRight);
 
-        weaponLeft = new TestWeapon1(ShipActionType.FIRE_WEAPON_1,
+        weaponLeft = new TestWeapon1(board, ShipActionType.FIRE_WEAPON_1,
                 new InputCode(InputType.INPUT_LONG, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
-        weaponRight = new TestWeapon1(ShipActionType.FIRE_WEAPON_2,
+        weaponRight = new TestWeapon1(board, ShipActionType.FIRE_WEAPON_2,
                 new InputCode(InputType.INPUT_LONG, InputType.PAUSE_SHORT, InputType.INPUT_SHORT, InputType.PAUSE_SHORT, InputType.INPUT_SHORT));
 
         sectionLeft = new ShipSection(this, board,
-                new Hitbox(null, team, 0, 0, 1, 1),
+                new Hitbox(null, team, 1, 0.5),
                 2, actionEvadeLeft) {
 
             @Override
@@ -54,7 +55,7 @@ public class TestShip extends Ship {
             }
         };
         sectionRight = new ShipSection(this, board,
-                new Hitbox(null, team, 0, 0, 1, 1),
+                new Hitbox(null, team, 1, 0.5),
                 2, actionEvadeRight) {
 
             @Override
@@ -71,18 +72,24 @@ public class TestShip extends Ship {
         //sectionLeft.setAdjacentSection(Direction.RIGHT, sectionRight);
         //sectionRight.setAdjacentSection(Direction.LEFT, sectionLeft);
         sections = new ShipSection[] {sectionLeft, sectionRight};
-
         focusedSection = 0;
         sectionLeft.setFocused(true);
         sectionRight.setFocused(true);
 
-        initDraw();
+        sectionLeft.setRelativePosition(-0.5, -0.35 * spriteFlipY);
+        sectionRight.setRelativePosition(0.5, -0.35 * spriteFlipY);
+
+        //add to board once sections and hitboxes are initialized
+        board.addShip(this);
+
+        if(!drawInitialized)
+            initDraw();
     }
 
     @Override
     public void update(double delta) {
         approxColX = Math.round((position.getWorldX() / board.getColumnWidth()) * 2.0) / 2.0;
-        System.out.println(position + "   " + approxColX);
+        //System.out.println(position + "   " + approxColX);
 
         //update evasion and let evasion system control position if evading
         evasionSystem.update(delta, board.getNumColumns(), approxColX, shipWidth);
@@ -103,27 +110,31 @@ public class TestShip extends Ship {
         switch(action.getAction()) {
             case FIRE_WEAPON_1:
                 System.out.println("fire 1");
-                //weaponLeft.fire();
+                weaponLeft.fire(team, position.getWorldX() - 0.5, position.getWorldY(), (int)spriteFlipY);
                 break;
             case FIRE_WEAPON_2:
                 System.out.println("fire 2");
+                weaponRight.fire(team, position.getWorldX() + 0.5, position.getWorldY(), (int)spriteFlipY);
                 break;
         }
     }
 
 
-    private float[] shipVertices;
-    private int[] shipIndices;
-    private float[] windowVertices;
-    private int[] windowIndices;
-    private float[] squareVertices;
+    private static boolean drawInitialized = false;
+    private static float[] shipVertices;
+    private static int[] shipIndices;
+    private static float[] windowVertices;
+    private static int[] windowIndices;
+    private static float[] squareVertices;
 
     private final float shipInnerSpriteScale = 0.97f;
     private final float shipWobbleAmount = 0.035f;
     private final float windowWobbleAmount = 0.020f;
     private final float squareWobbleAmount = 0.020f;
 
-    private void initDraw() {
+    private static void initDraw() {
+        drawInitialized = true;
+
         float screenShipTopY = 0.8f;
         float screenShipBotY = -0.5f;
         float screenShipCornerX = 0.8f;
@@ -197,8 +208,8 @@ public class TestShip extends Ship {
     }
 
     public void draw(BoardCamera camera) {
-        float viewRatio = camera.getViewRatio();
-        float screenUnitX = camera.getScreenColumnWidth();
+        float screenUnitX = camera.getScreenUnitX();
+        float screenUnitY = camera.getScreenUnitY();
 
         float rotation = evasionSystem.getEvadeRotation();
 
@@ -208,31 +219,31 @@ public class TestShip extends Ship {
 
         Graphics.drawTriangles(shipVertices, shipIndices,
                 screenX, screenY,
-                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitX / viewRatio,
+                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitY,
                 screenUnitX * shipWobbleAmount, 0.3983f,
 
                 screenX, screenY,
-                -rotation, 1.0f * screenUnitX * shipInnerSpriteScale, spriteFlipY * screenUnitX * shipInnerSpriteScale / viewRatio,
+                -rotation, 1.0f * screenUnitX * shipInnerSpriteScale, spriteFlipY * screenUnitY * shipInnerSpriteScale,
                 screenUnitX * shipWobbleAmount, 0.5216f
         );
 
         Graphics.drawTriangles(windowVertices, windowIndices,
                 screenX, screenY,
-                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitX / viewRatio,
+                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitY,
                 windowWobbleAmount * screenUnitX, 0.7101f,
 
                 screenX, screenY,
-                -rotation, 1.0f * 0.90f * screenUnitX, spriteFlipY * 0.90f * screenUnitX / viewRatio,
+                -rotation, 1.0f * 0.90f * screenUnitX, spriteFlipY * 0.90f * screenUnitY,
                 windowWobbleAmount * screenUnitX, 0.4139f
         );
 
         Graphics.drawQuads(squareVertices,
                 screenX, screenY,
-                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitX / viewRatio,
+                -rotation, 1.0f * screenUnitX, spriteFlipY * screenUnitY,
                 squareWobbleAmount * screenUnitX, 0.8296f,
 
                 screenX, screenY,
-                rotation, -1.0f * screenUnitX, spriteFlipY * screenUnitX / viewRatio,
+                rotation, -1.0f * screenUnitX, spriteFlipY * screenUnitY,
                 squareWobbleAmount * screenUnitX, 0.1296f
         );
     }

@@ -14,6 +14,7 @@ public abstract class ShipSection implements HitboxController {
     protected Ship ship;
     protected Hitbox hitbox;
 
+    protected double worldOffsetX, worldOffsetY;
     protected double worldX, worldY;
     protected int health, maxHealth;
     protected boolean isFocused = false;
@@ -36,12 +37,6 @@ public abstract class ShipSection implements HitboxController {
         setWeapons(new Weapon[] {});
     }
 
-    public void setPosition(double worldX, double worldY) {
-        this.worldX = worldX;
-        this.worldY = worldY;
-        hitbox.setPosition(worldX, worldY);
-    }
-
     public void setWeapons(Weapon[] weapons) {
         this.weapons = weapons;
 
@@ -61,7 +56,16 @@ public abstract class ShipSection implements HitboxController {
 
     public abstract void collide(Projectile p);
 
+    public void setRelativePosition(double offsetX, double offsetY) {
+        worldOffsetX = offsetX;
+        worldOffsetY = offsetY;
+    }
+
     public void update(double delta) {
+        worldX = ship.getPosition().getWorldX() + worldOffsetX;
+        worldY = ship.getPosition().getWorldY() + worldOffsetY;
+        hitbox.setPosition(worldX, worldY);
+
         for(Weapon w: weapons) {
             w.update(delta);
         }

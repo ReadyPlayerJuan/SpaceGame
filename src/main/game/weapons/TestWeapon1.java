@@ -1,7 +1,10 @@
 package main.game.weapons;
 
+import main.game.boards.Board;
+import main.game.collision.projectiles.TestProjectile1;
 import main.game.enums.ShipActionType;
 import main.game.enums.ShipActionState;
+import main.game.enums.Team;
 import main.game.ships.ShipAction;
 import main.input.InputCode;
 
@@ -9,14 +12,18 @@ public class TestWeapon1 extends Weapon {
     private double cooldown = 0;
     private ShipAction actionFireWeapon;
 
-    public TestWeapon1(ShipActionType fireAction, InputCode code) {
-        super();
+    public TestWeapon1(Board board, ShipActionType fireAction, InputCode code) {
+        super(board);
 
         actionFireWeapon = new ShipAction(fireAction, code);
 
         this.weaponActions = new ShipAction[] {
                 actionFireWeapon,
         };
+    }
+
+    public void fire(Team team, double x, double y, int direction) {
+        new TestProjectile1(board, team, x, y, direction);
     }
 
     public void update(double delta) {

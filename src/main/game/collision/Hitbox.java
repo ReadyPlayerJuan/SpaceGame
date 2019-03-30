@@ -22,6 +22,10 @@ public class Hitbox {
         this.height = height;
     }
 
+    public Hitbox(HitboxController owner, Team team, double width, double height) {
+        this(owner, team, 0, 0, width, height);
+    }
+
     public void collide(Projectile p) {
         owner.collide(p);
     }

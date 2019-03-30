@@ -37,6 +37,10 @@ public abstract class Ship {
             spriteFlipY = -1;
             position.setY(board.getPlayableHeight() / 2);
         }
+
+        if(board.getNumColumns() % 2 == 1) {
+            position.setX(0.5 * spriteFlipY);
+        }
     }
 
     public abstract void update(double delta);
@@ -77,6 +81,10 @@ public abstract class Ship {
                     availableActions.add(a);
             }
         }
+    }
+
+    public BoardVector getPosition() {
+        return position;
     }
 
     public ShipSection[] getSections() {

@@ -23,15 +23,11 @@ public class GameView extends View {
 
         layerFrameBuffer = new FrameBuffer(width, height);
 
-        board = new Board(this, 6, 6.0f);
+        board = new Board(this, 5, 8.0f);
         camera = new BoardCamera(board, width, height);
 
         playerShip = new TestShip(board, Team.PLAYER);
-        //playerShip.setPosition(board.getBoardWidth()/2 - 1);
-        board.addShip(playerShip);
-
         enemyShip = new TestShip(board, Team.ENEMY);
-        board.addShip(enemyShip);
     }
 
     public void updateSelf(double delta) {
@@ -50,11 +46,13 @@ public class GameView extends View {
         Graphics.clear(0, 0, 0, 1);
 
         Graphics.startDrawingColorRegion(ColorRegion.GAME_BACKGROUND);
-        board.draw(camera);
+        board.drawBackground(camera);
         Graphics.startDrawingColorRegion(ColorRegion.GAME_PLAYER_SHIP);
         playerShip.draw(camera);
         Graphics.startDrawingColorRegion(ColorRegion.GAME_ENEMY_SHIP);
         enemyShip.draw(camera);
+        Graphics.startDrawingColorRegion(ColorRegion.GAME_PROJECTILE);
+        board.drawProjectiles(camera);
         Graphics.finishDrawingColorRegion();
 
         layerFrameBuffer.unbindFrameBuffer();

@@ -9,7 +9,7 @@ public enum ColorTheme {
             ColorRegion.GAME_PROJECTILE, ColorRegion.GAME_});*/
     GAME (0, new ColorRegion[] {
             ColorRegion.GAME_BACKGROUND, ColorRegion.GAME_PLAYER_SHIP, ColorRegion.GAME_ENEMY_SHIP,
-            ColorRegion.GAME_WEAPON, ColorRegion.GAME_});
+            ColorRegion.GAME_PROJECTILE, ColorRegion.GAME_});
 
     public int index;
     public ColorRegion[] regions;

@@ -56,8 +56,10 @@ public class ShipEvasion {
 
             currentColX = startColX + evadePct * evadeDirection;
 
-            if(evadeTimer == 0)
+            if(evadeTimer == 0) {
                 finishedEvading = true;
+                currentColX = endColX;
+            }
         }
 
         //set ship action states

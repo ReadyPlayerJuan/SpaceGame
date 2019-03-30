@@ -30,14 +30,8 @@ public class Board {
     }
 
     public void update(double delta) {
-        for(int i = 0; i < projectiles.size(); i++) {
-            Projectile p = projectiles.get(i);
+        for(Projectile p: projectiles) {
             p.update(delta);
-
-            if(p.shouldBeDestroyed()) {
-                projectiles.remove(i);
-                i--;
-            }
         }
 
         for(Hitbox h: hitboxes) {
@@ -50,12 +44,19 @@ public class Board {
                 }
             }
         }
+
+        for(int i = 0; i < projectiles.size(); i++) {
+            if(projectiles.get(i).shouldBeDestroyed()) {
+                projectiles.remove(i);
+                i--;
+            }
+        }
     }
 
-    public void draw(BoardCamera camera) {
+    public void drawBackground(BoardCamera camera) {
         lineWidth = 2.0f * LINE_WIDTH_PIXELS / camera.getViewWidth();
 
-        float screenUnitX = camera.getScreenColumnWidth();
+        float screenUnitX = camera.getScreenUnitX();
 
         Graphics.drawQuad(
                 -1, -1,
@@ -70,6 +71,12 @@ public class Board {
                     colx * screenUnitX - lineWidth/2, 1,
                     colx * screenUnitX + lineWidth/2, -1,
                     colx * screenUnitX + lineWidth/2, 1);
+        }
+    }
+
+    public void drawProjectiles(BoardCamera camera) {
+        for(Projectile p: projectiles) {
+            p.draw(camera);
         }
     }
 

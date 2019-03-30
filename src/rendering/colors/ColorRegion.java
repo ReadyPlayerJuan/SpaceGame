@@ -14,7 +14,7 @@ public enum ColorRegion {
     GAME_BACKGROUND         (0, ColorSet.GAME_BACKGROUND),
     GAME_PLAYER_SHIP        (1, ColorSet.GAME_TEST_SHIP_1),
     GAME_ENEMY_SHIP         (2, ColorSet.GAME_TEST_SHIP_2),
-    GAME_WEAPON             (3, ColorSet.GAME_WEAPON),
+    GAME_PROJECTILE         (3, ColorSet.GAME_PROJECTILE),
     GAME_                   (4, ColorSet.GAME_);
 
     //HUD_
